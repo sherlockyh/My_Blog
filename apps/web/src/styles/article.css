@@ -1,0 +1,253 @@
+/* ===== 文章详情 Markdown ===== */
+.article-detail {
+  max-width: 860px;
+}
+
+.article-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 8px 0 12px;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.markdown-body {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--text);
+}
+
+.markdown-body h2,
+.markdown-body h3 {
+  margin-top: 28px;
+}
+
+.markdown-body p {
+  margin: 12px 0;
+}
+
+.markdown-body code {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  color: var(--primary);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 13px;
+}
+
+.markdown-body pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.markdown-body pre code {
+  background: transparent;
+  color: var(--text);
+  padding: 0;
+}
+
+.markdown-body blockquote {
+  margin: 16px 0;
+  padding: 10px 16px;
+  border-left: 4px solid var(--primary);
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-secondary);
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+/* ===== 列表页 / 资源 / 留言板 / 关于 ===== */
+.list-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.list-search {
+  max-width: 360px;
+}
+
+.list-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.list-tags .ant-tag {
+  cursor: pointer;
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+.list-tags .tag-active {
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.list-pagination {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1000px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.resource-group {
+  margin-bottom: 28px;
+}
+
+.resource-category {
+  font-size: 17px;
+  margin-bottom: 14px;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.resource-card {
+  display: block;
+  padding: 18px;
+}
+
+.resource-card h4 {
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.resource-card h4 .anticon {
+  color: var(--primary);
+}
+
+.resource-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guestbook-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.guestbook-form {
+  margin-bottom: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.guestbook-list .guestbook-item {
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.guestbook-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gradient-btn);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.guestbook-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.about-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.about-page h2 {
+  margin: 16px 0 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-page h2 .anticon {
+  color: var(--primary);
+}
+
+.about-page .meta {
+  justify-content: center;
+  width: 100%;
+}
+
+.about-page-bio {
+  color: var(--text-secondary);
+  line-height: 1.9;
+  margin: 18px 0;
+}
+
+.about-page-slogan {
+  margin-top: 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}

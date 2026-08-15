@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Article {
+  id          Int           @id @default(autoincrement())
+  slug        String        @unique
+  titleZh     String
+  titleEn     String        @default("")
+  summaryZh   String        @default("")
+  summaryEn   String        @default("")
+  contentZh   String        @default("")
+  contentEn   String        @default("")
+  cover       String        @default("")
+  tags        String[]
+  status      ArticleStatus @default(DRAFT)
+  viewCount   Int           @default(0)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Project {
+  id        Int      @id @default(autoincrement())
+  titleZh   String
+  titleEn   String   @default("")
+  descZh    String   @default("")
+  descEn    String   @default("")
+  cover     String   @default("")
+  tags      String[]
+  link      String   @default("")
+  featured  Boolean  @default(false)
+  sort      Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Resource {
+  id        Int      @id @default(autoincrement())
+  titleZh   String
+  titleEn   String   @default("")
+  descZh    String   @default("")
+  descEn    String   @default("")
+  link      String   @default("")
+  category  String   @default("")
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  nickname  String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model SiteConfig {
+  id           Int      @id @default(1)
+  hero         Json
+  features     Json
+  weatherCity  String   @default("Hangzhou")
+  announcement String   @default("")
+  updatedAt    DateTime @updatedAt
+}
+
+model Profile {
+  id        Int      @id @default(1)
+  name      String   @default("")
+  avatar    String   @default("")
+  bioZh     String   @default("")
+  bioEn     String   @default("")
+  location  String   @default("")
+  socials   Json
+  updatedAt DateTime @updatedAt
+}

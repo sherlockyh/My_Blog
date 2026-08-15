@@ -1,0 +1,40 @@
+/* 亮色（默认） */
+:root {
+  --bg: #f4f7fc;
+  --bg-soft: #eef4ff;
+  --card: #ffffff;
+  --card-soft: #f8fafc;
+  --border: rgba(15, 23, 42, 0.08);
+  --text: #1f2937;
+  --text-secondary: #64748b;
+  --primary: #1677ff;
+  --primary-2: #4096ff;
+  --gradient: linear-gradient(90deg, #1677ff, #4096ff);
+  --gradient-btn: linear-gradient(90deg, #36a3ff, #4361ee);
+  --nav-bg: rgba(255, 255, 255, 0.85);
+  --shadow: 0 6px 24px rgba(30, 64, 175, 0.08);
+  --glow: 0 0 0 rgba(0, 0, 0, 0);
+  --hero-glow: radial-gradient(600px 300px at 80% 20%, rgba(59, 130, 246, 0.12), transparent);
+  --code-bg: #f6f8fa;
+}
+
+/* 深夜模式 */
+[data-theme='dark'] {
+  --bg: #0b1220;
+  --bg-soft: #0e1730;
+  --card: #131c31;
+  --card-soft: #182342;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #e6edf7;
+  --text-secondary: #94a3b8;
+  --primary: #3b82f6;
+  --primary-2: #22d3ee;
+  --gradient: linear-gradient(90deg, #3b82f6, #22d3ee);
+  --gradient-btn: linear-gradient(90deg, #2563eb, #06b6d4);
+  --nav-bg: rgba(11, 18, 32, 0.85);
+  --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  --glow: 0 0 24px rgba(59, 130, 246, 0.15);
+  --hero-glow: radial-gradient(700px 340px at 78% 18%, rgba(37, 99, 235, 0.25), transparent),
+    radial-gradient(500px 260px at 15% 70%, rgba(34, 211, 238, 0.12), transparent);
+  --code-bg: #0d1526;
+}
