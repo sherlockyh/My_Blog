@@ -1,0 +1,20 @@
+import admin from './admin';
+
+const en = {
+  nav: { home: 'Home', about: 'About', articles: 'Tech Articles', archives: 'Archives', categories: 'Categories', tags: 'Tags', projects: 'Projects', resources: 'Resources', guestbook: 'Guestbook' },
+  hero: { viewProjects: 'View Projects', readArticles: 'Read Articles', posts: 'Posts', views: 'Visits', followers: 'Followers' },
+  home: { featured: 'Featured Articles', featuredProjects: 'Featured Projects', viewAll: 'View all', viewAllProjects: 'View all', aboutMe: 'About Me', latest: 'Latest Articles', views: 'views', hotTags: 'Hot Tags', aboutRole: 'Frontend / Product Experience / Writing', aboutBioFallback: 'Frontend engineer who loves tech and design, solving problems with code.', aboutFocusFrontend: 'Modern Frontend', aboutFocusDesign: 'UX Design', aboutFocusProduct: 'Product Sense', aboutLocationFallback: 'Hangzhou, Zhejiang', aboutStatus: 'Always learning', aboutWorkMode: 'Making complex ideas feel simple' },
+  articles: { title: 'Article List', subtitle: 'Browse all public posts by time, tags and keywords.', search: 'Search articles...', all: 'All', empty: 'No articles yet', back: 'Back to list', publishedAt: 'Published at', total: 'posts', emptyContent: 'The article body is still being polished.', categories: 'Categories', switchArticle: 'Switch articles by category', readingTime: '6 min read', toc: 'Table of Contents', emptyToc: 'No headings yet', related: 'Related Articles', articleTags: 'Article Tags', copy: 'Copy', copied: 'Copied', backTop: 'Back to top' },
+  aboutPage: { badge: 'About Me', role: 'Frontend / Product Experience / Writing', status: 'Always learning', kicker: 'Hello, world', title: 'I turn complex ideas into clear, usable products', bioFallback: 'Frontend engineer who loves tech and design, solving problems with code.', story: 'I care about frontend engineering, interaction design, data visualization and personal productivity tools. I also turn real debugging notes and project experience into reusable articles.', stack: 'Daily stack', language: 'Main language', keyword: 'Long-term keyword', focusFrontend: 'Modern Frontend', focusFrontendDesc: 'React, TypeScript, engineering workflow and maintainable component design.', focusExperience: 'User Experience', focusExperienceDesc: 'Clear hierarchy, responsive feedback and flows that feel natural in real use.', focusWriting: 'Technical Notes', focusWritingDesc: 'Turning project lessons and debugging paths into practical articles.', nowKicker: 'Current Focus', nowTitle: 'Build, write and share continuously', nowDesc: 'This site will keep collecting projects, articles, useful resources and real thoughts from daily development.', readArticles: 'Read Articles', viewProjects: 'View Projects', leaveMessage: 'Leave Message' },
+  archives: { title: 'Archives', subtitle: 'Browse all published articles by timeline.' },
+  categories: { title: 'Categories', subtitle: 'Browse articles by primary technical direction.', uncategorized: 'Uncategorized', articleCount: '{{count}} articles' },
+  tags: { title: 'Tags', subtitle: 'Use tags to quickly find topics you care about.', empty: 'No tags yet' },
+  projects: { title: 'Projects', subtitle: 'Products, tools and experiments I have built.', search: 'Search projects...', all: 'All projects', empty: 'No projects yet' },
+  resources: { title: 'Resources', subtitle: 'Useful tools, references and links.', search: 'Search resources...', all: 'All resources', empty: 'No resources yet' },
+  guestbook: { title: 'Guestbook', subtitle: 'Leave your thoughts, let\'s talk~', nickname: 'Nickname', content: 'Say something...', submit: 'Submit', submitOk: 'Message sent', loginFirst: '' },
+  footer: { rights: 'Creating fun digital experiences with code', admin: 'Admin' },
+  admin,
+  common: { loading: 'Loading...', loadFailed: 'Failed to load data', retry: 'Retry', view: 'View', learnMore: 'Learn more', open: 'Open link', expand: 'Expand', collapse: 'Collapse', close: 'Close', cancel: 'Cancel', unsavedTitle: 'Unsaved changes', unsavedDesc: 'Your current changes will not be saved after leaving or resetting.', leave: 'Continue' },
+};
+
+export default en;

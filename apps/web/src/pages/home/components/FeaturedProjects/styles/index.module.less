@@ -1,0 +1,33 @@
+:global {
+  /* ===== Featured projects ===== */
+  .featured-section {
+    padding-top: 42px;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .view-all {
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  @media (max-width: 1000px) {
+    .featured-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .featured-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

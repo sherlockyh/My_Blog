@@ -1,8 +1,8 @@
 import { Injectable, Logger, OnModuleInit, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { PrismaService } from '../../common/prisma.service';
-import { LoginDto } from './auth.dto';
+import { PrismaService } from '../../common/prisma/prisma.service';
+import { LoginDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -17,6 +17,9 @@ export class AuthService implements OnModuleInit {
   async onModuleInit() {
     const count = await this.prisma.user.count();
     if (count > 0) return;
+    if (process.env.NODE_ENV === 'production' && (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD)) {
+      throw new Error('生产环境首次启动必须配置 ADMIN_USERNAME 和 ADMIN_PASSWORD');
+    }
     const username = process.env.ADMIN_USERNAME || 'admin';
     const password = process.env.ADMIN_PASSWORD || 'admin123';
     await this.prisma.user.create({

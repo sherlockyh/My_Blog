@@ -1,40 +1,50 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma.service';
-import { CreateProjectDto, UpdateProjectDto } from './project.dto';
+import { Injectable } from '@nestjs/common';
+import { PageQueryDto } from '../../common/dto/page-query.dto';
+import { rethrowPrismaError } from '../../common/errors/prisma-error.mapper';
+import { getPageParams, toPageResult } from '../../common/utils/pagination';
+import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
+import { toProjectDto, toProjectDtos } from './mappers/project.mapper';
+import { ProjectRepository } from './repositories/project.repository';
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly projects: ProjectRepository) {}
 
   list() {
-    return this.prisma.project.findMany({ orderBy: [{ sort: 'asc' }, { createdAt: 'desc' }] });
+    return this.projects.list().then(toProjectDtos);
+  }
+
+  async adminList(query: PageQueryDto) {
+    const { page, pageSize, skip, take } = getPageParams(query);
+    const [items, total] = await Promise.all([
+      this.projects.findPage(skip, take),
+      this.projects.count(),
+    ]);
+    return toPageResult(toProjectDtos(items), total, page, pageSize);
   }
 
   featured() {
-    return this.prisma.project.findMany({
-      where: { featured: true },
-      orderBy: [{ sort: 'asc' }, { createdAt: 'desc' }],
-      take: 3,
-    });
+    return this.projects.featured().then(toProjectDtos);
   }
 
   create(dto: CreateProjectDto) {
-    return this.prisma.project.create({ data: dto });
+    return this.projects.create(dto).then(toProjectDto);
   }
 
   async update(id: number, dto: UpdateProjectDto) {
-    await this.ensureExists(id);
-    return this.prisma.project.update({ where: { id }, data: dto });
+    try {
+      return toProjectDto(await this.projects.update(id, dto));
+    } catch (err) {
+      rethrowPrismaError(err, { notFound: 'Project not found' });
+    }
   }
 
   async remove(id: number) {
-    await this.ensureExists(id);
-    await this.prisma.project.delete({ where: { id } });
-    return { ok: true };
-  }
-
-  private async ensureExists(id: number) {
-    const row = await this.prisma.project.findUnique({ where: { id } });
-    if (!row) throw new NotFoundException('Project not found');
+    try {
+      await this.projects.delete(id);
+      return { ok: true };
+    } catch (err) {
+      rethrowPrismaError(err, { notFound: 'Project not found' });
+    }
   }
 }

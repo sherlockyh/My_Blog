@@ -7,9 +7,12 @@
     "dev:web": "turbo run dev --filter=@my-blog/web",
     "dev:server": "turbo run dev --filter=@my-blog/server",
     "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:push": "pnpm --filter @my-blog/server prisma:push",
+    "db:migrate:dev": "pnpm --filter @my-blog/server prisma:migrate:dev",
+    "db:migrate:deploy": "pnpm --filter @my-blog/server prisma:migrate:deploy",
     "db:seed": "pnpm --filter @my-blog/server seed"
   },
   "devDependencies": {

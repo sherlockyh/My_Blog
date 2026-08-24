@@ -1,0 +1,80 @@
+:global {
+  .page-heading {
+    margin-bottom: 22px;
+  }
+
+  .page-heading-split {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-end;
+  }
+
+  .page-heading h1 {
+    margin: 0 0 10px;
+    font-size: 30px;
+    line-height: 1.25;
+    font-weight: 850;
+  }
+
+  .page-heading p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .page-count {
+    flex-shrink: 0;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 14px;
+    padding-bottom: 4px;
+  }
+
+  .blog-module {
+    min-height: 62vh;
+  }
+
+  .archive-list {
+    display: grid;
+    gap: 18px;
+  }
+
+  .archive-year {
+    padding: 22px;
+  }
+
+  .archive-year h2 {
+    margin: 0 0 12px;
+    color: var(--primary);
+  }
+
+  .archive-items {
+    display: grid;
+    gap: 4px;
+  }
+
+  .archive-item {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .archive-date {
+    color: var(--text-secondary);
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  @media (max-width: 900px) {
+    .archive-item {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+}

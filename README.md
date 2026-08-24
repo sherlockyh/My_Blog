@@ -13,7 +13,8 @@
 
 ## 功能
 
-- 前台：首页（Hero / 特色卡片 / 精选项目 + 关于我 / 最新文章）、关于我、技术文章（列表搜索 + 标签过滤 + Markdown 详情 + 浏览量）、项目作品、资源分享、留言板
+- 前台：首页（Hero / 6 个技能入口 / 推荐文章 / 最新文章 + 关于我 + 热门标签）、文章列表（搜索 + 标签过滤 + 分页 + 侧栏）、Markdown 文章详情、归档、分类、标签、关于我、项目作品、资源分享、留言板
+- 后台：独立 `/admin` 管理区，只承担内容编辑、配置和数据管理；公开博客页面只负责展示和阅读
 - 深色模式：一键切换，CSS 变量 + antd darkAlgorithm 双轨适配
 - 中英双语：界面文案 i18next，内容字段 `*Zh/*En` 成对存储，EN 为空自动回退中文
 - 天气胶囊：open-meteo 免费接口（免 key）
@@ -42,7 +43,7 @@ pnpm dev
 浏览器访问：
 
 - 前台：<http://localhost:5173>
-- 后台：<http://localhost:5173/admin/login>（默认账号 `admin` / `admin123`）
+- 后台：<http://localhost:5173/admin/login>（开发环境默认账号 `admin` / `admin123`）
 
 ## 环境变量
 
@@ -54,9 +55,16 @@ REDIS_URL=redis://localhost:6379
 JWT_SECRET=change-me
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=admin123
+CORS_ORIGIN=http://localhost:5173
 ```
 
-管理员账号首次启动时若 User 表为空会自动按 `ADMIN_USERNAME/ADMIN_PASSWORD` 创建。
+前端可选配置在 `apps/web/.env`：
+
+```ini
+VITE_API_BASE=/api
+```
+
+管理员账号首次启动时若 User 表为空会自动按 `ADMIN_USERNAME/ADMIN_PASSWORD` 创建。生产环境必须显式配置安全的 `ADMIN_USERNAME` 和 `ADMIN_PASSWORD`，不能使用默认密码。
 
 ## 常用命令
 
@@ -68,6 +76,10 @@ pnpm db:push        # prisma db push
 pnpm db:seed        # 种子数据
 pnpm build          # 构建全部应用
 ```
+
+## 架构与性能说明
+
+当前架构、已完成的性能优化和后续扩展建议见 [docs/architecture-performance.md](docs/architecture-performance.md)。
 
 ## 目录结构
 

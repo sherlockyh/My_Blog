@@ -1,0 +1,88 @@
+:global {
+  .admin-site-config-page {
+    max-width: 1680px;
+    padding-bottom: 72px;
+  }
+
+  .admin-config-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 380px);
+    gap: 24px;
+    align-items: start;
+  }
+
+  .admin-config-main {
+    display: grid;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .admin-config-side {
+    display: grid;
+    gap: 16px;
+    align-self: start;
+    min-width: 360px;
+    max-width: 380px;
+    width: 100%;
+  }
+
+  .admin-feature-slot.ant-card {
+    margin-bottom: 12px;
+    border-color: #e2e8f0;
+    box-shadow: none;
+  }
+
+  .admin-feature-slot:last-child {
+    margin-bottom: 0;
+  }
+
+  .admin-config-note .ant-card-body {
+    display: grid;
+    gap: 18px;
+  }
+
+  .admin-config-note-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .admin-config-note-icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #2563eb;
+    background: #eff6ff;
+  }
+
+  .admin-config-note-text {
+    min-width: 0;
+  }
+
+  .admin-config-note-text strong {
+    display: block;
+    color: #0f172a;
+  }
+
+  .admin-config-note-text p {
+    margin: 4px 0 0;
+    color: #64748b;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 1180px) {
+    .admin-config-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .admin-config-side {
+      min-width: 0;
+      max-width: none;
+    }
+  }
+}

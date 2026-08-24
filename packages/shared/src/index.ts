@@ -112,6 +112,7 @@ export interface Paged<T> {
   total: number;
   page: number;
   pageSize: number;
+  nextCursor?: string;
 }
 
 export interface ApiResponse<T> {

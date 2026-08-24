@@ -5,10 +5,13 @@
   "scripts": {
     "dev": "tsx watch src/main.ts",
     "build": "prisma generate && tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "start": "node dist/main.js",
     "seed": "tsx src/prisma/seed.ts",
     "prisma:push": "prisma db push",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@my-blog/shared": "workspace:*",

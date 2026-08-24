@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { FeatureItem, HeroConfig, ProfileDTO, SiteConfigDTO, SiteDTO, StatsDTO } from '@my-blog/shared';
-import { PrismaService } from '../../common/prisma.service';
-import { RedisService } from '../../common/redis.service';
-import { ViewCountService } from '../view-count/view-count.service';
-import { UpdateProfileDto, UpdateSiteConfigDto } from './site-config.dto';
-
-const CACHE_KEY = 'cache:site';
+import { CACHE_KEYS, CACHE_TTL } from '../../common/cache/cache-keys';
+import { CacheService } from '../../common/cache/cache.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
+import { ViewCountService } from '../view-count/services/view-count.service';
+import { UpdateProfileDto, UpdateSiteConfigDto } from './dto/site-config.dto';
 
 const DEFAULT_HERO: HeroConfig = {
   greeting: 'Hi, 我是 yh',
@@ -16,11 +15,18 @@ const DEFAULT_HERO: HeroConfig = {
 };
 
 const DEFAULT_FEATURES: FeatureItem[] = [
-  { icon: 'thunder', titleZh: '高效开发', titleEn: 'Efficiency', descZh: '专注工程化和性能体验，打造高质量 Web 应用', descEn: 'Focused on engineering and performance for high-quality web apps' },
-  { icon: 'box', titleZh: '用户体验', titleEn: 'UX', descZh: '注重细节与交互设计，让产品更清晰、更好用', descEn: 'Attention to detail and interaction design for clearer, friendlier products' },
-  { icon: 'layers', titleZh: '持续学习', titleEn: 'Learning', descZh: '保持好奇，探索新技术，不断提升技术边界', descEn: 'Stay curious, explore new tech, keep pushing the boundary' },
-  { icon: 'team', titleZh: '分享交流', titleEn: 'Sharing', descZh: '乐于分享知识，与志同道合的伙伴交流', descEn: 'Love sharing knowledge with like-minded peers' },
+  { icon: 'code', titleZh: '前端开发', titleEn: 'Frontend', descZh: '', descEn: '' },
+  { icon: 'react', titleZh: 'React', titleEn: 'React', descZh: '', descEn: '' },
+  { icon: 'ts', titleZh: 'TypeScript', titleEn: 'TypeScript', descZh: '', descEn: '' },
+  { icon: 'node', titleZh: 'Node.js', titleEn: 'Node.js', descZh: '', descEn: '' },
+  { icon: 'idea', titleZh: '设计灵感', titleEn: 'Ideas', descZh: '', descEn: '' },
+  { icon: 'tool', titleZh: '工具推荐', titleEn: 'Tools', descZh: '', descEn: '' },
 ];
+
+function normalizeFeatures(features?: FeatureItem[]) {
+  // 兼容旧配置的 4 个特色项：按设计稿固定补齐 6 个入口，避免前台出现空白技能卡。
+  return DEFAULT_FEATURES.map((fallback, index) => ({ ...fallback, ...(features?.[index] ?? {}) }));
+}
 
 const DEFAULT_PROFILE: ProfileDTO = {
   name: 'yh',
@@ -35,14 +41,14 @@ const DEFAULT_PROFILE: ProfileDTO = {
 export class SiteConfigService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly redis: RedisService,
+    private readonly cache: CacheService,
     private readonly views: ViewCountService,
   ) {}
 
   /** 公开接口：站点配置 + 个人信息，Redis 缓存 10 分钟 */
   async getSite(): Promise<SiteDTO> {
-    const cached = await this.redis.client.get(CACHE_KEY);
-    if (cached) return JSON.parse(cached) as SiteDTO;
+    const cached = await this.cache.getJson<SiteDTO>(CACHE_KEYS.site);
+    if (cached) return cached;
 
     const [configRow, profileRow] = await Promise.all([
       this.prisma.siteConfig.findUnique({ where: { id: 1 } }),
@@ -52,7 +58,7 @@ export class SiteConfigService {
     const site: SiteDTO = {
       config: {
         hero: { ...DEFAULT_HERO, ...((configRow?.hero as any) ?? {}) },
-        features: (configRow?.features as unknown as FeatureItem[]) ?? DEFAULT_FEATURES,
+        features: normalizeFeatures(configRow?.features as unknown as FeatureItem[] | undefined),
         weatherCity: configRow?.weatherCity ?? 'Hangzhou',
         announcement: configRow?.announcement ?? '',
       },
@@ -67,7 +73,7 @@ export class SiteConfigService {
           }
         : DEFAULT_PROFILE,
     };
-    await this.redis.client.set(CACHE_KEY, JSON.stringify(site), 'EX', 600);
+    await this.cache.setJson(CACHE_KEYS.site, site, CACHE_TTL.site);
     return site;
   }
 
@@ -75,7 +81,7 @@ export class SiteConfigService {
     const current = (await this.getSite()).config;
     const next: SiteConfigDTO = {
       hero: { ...current.hero, ...dto.hero },
-      features: dto.features?.length ? (dto.features as FeatureItem[]) : current.features,
+      features: dto.features?.length ? normalizeFeatures(dto.features as FeatureItem[]) : current.features,
       weatherCity: dto.weatherCity ?? current.weatherCity,
       announcement: dto.announcement ?? current.announcement,
     };
@@ -84,7 +90,7 @@ export class SiteConfigService {
       create: { id: 1, hero: next.hero as any, features: next.features as any, weatherCity: next.weatherCity, announcement: next.announcement },
       update: { hero: next.hero as any, features: next.features as any, weatherCity: next.weatherCity, announcement: next.announcement },
     });
-    await this.redis.client.del(CACHE_KEY);
+    await this.cache.del(CACHE_KEYS.site);
     return next;
   }
 
@@ -96,7 +102,7 @@ export class SiteConfigService {
       create: { id: 1, name: next.name, avatar: next.avatar, bioZh: next.bioZh, bioEn: next.bioEn, location: next.location, socials: next.socials as any },
       update: { name: next.name, avatar: next.avatar, bioZh: next.bioZh, bioEn: next.bioEn, location: next.location, socials: next.socials as any },
     });
-    await this.redis.client.del(CACHE_KEY);
+    await this.cache.del(CACHE_KEYS.site);
     return next;
   }
 

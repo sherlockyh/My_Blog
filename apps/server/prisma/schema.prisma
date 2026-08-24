@@ -35,6 +35,10 @@ model Article {
   publishedAt DateTime?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+
+  @@index([status, publishedAt, id])
+  @@index([updatedAt, id])
+  @@index([viewCount])
 }
 
 model Project {
@@ -49,6 +53,9 @@ model Project {
   featured  Boolean  @default(false)
   sort      Int      @default(0)
   createdAt DateTime @default(now())
+
+  @@index([sort, createdAt, id])
+  @@index([featured, sort, createdAt, id])
 }
 
 model Resource {
@@ -60,6 +67,9 @@ model Resource {
   link      String   @default("")
   category  String   @default("")
   createdAt DateTime @default(now())
+
+  @@index([createdAt, id])
+  @@index([category, createdAt, id])
 }
 
 model Message {
@@ -67,6 +77,8 @@ model Message {
   nickname  String
   content   String
   createdAt DateTime @default(now())
+
+  @@index([createdAt, id])
 }
 
 model SiteConfig {
@@ -87,4 +99,20 @@ model Profile {
   location  String   @default("")
   socials   Json
   updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  userId     Int?
+  username   String   @default("")
+  action     String
+  targetType String
+  targetId   String   @default("")
+  detail     Json?
+  ip         String   @default("")
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([targetType, targetId])
+  @@index([userId, createdAt])
 }

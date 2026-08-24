@@ -1,0 +1,141 @@
+:global {
+  .page-heading {
+    margin-bottom: 22px;
+  }
+
+  .page-heading-split {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-end;
+  }
+
+  .page-heading h1 {
+    margin: 0 0 10px;
+    font-size: 30px;
+    line-height: 1.25;
+    font-weight: 850;
+  }
+
+  .page-heading p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .page-count {
+    flex-shrink: 0;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 14px;
+    padding-bottom: 4px;
+  }
+
+  .list-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    backdrop-filter: blur(14px);
+  }
+
+  .list-search {
+    max-width: 380px;
+    min-width: min(100%, 280px);
+  }
+
+  .list-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .list-tags .ant-tag {
+    cursor: pointer;
+    background: var(--card);
+    border-color: var(--border);
+    color: var(--text-secondary);
+  }
+
+  .list-tags .ant-tag:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .list-tags .tag-active {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .list-pagination {
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  .resource-group {
+    margin-bottom: 28px;
+  }
+
+  .resource-category {
+    font-size: 17px;
+    margin-bottom: 14px;
+  }
+
+  .resource-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .resource-card {
+    display: block;
+    padding: 18px;
+    min-height: 132px;
+  }
+
+  .resource-card h4 {
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .resource-card h4 .anticon {
+    color: var(--primary);
+  }
+
+  .resource-card p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 900px) {
+    .list-toolbar {
+      align-items: stretch;
+    }
+    .list-tags {
+      justify-content: flex-start;
+    }
+    .resource-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .list-search {
+      width: 100%;
+      max-width: none;
+    }
+  }
+}

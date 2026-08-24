@@ -1,23 +1,38 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma.service';
-import { CreateMessageDto } from './message.dto';
+import { Injectable } from '@nestjs/common';
+import { PageQueryDto } from '../../common/dto/page-query.dto';
+import { rethrowPrismaError } from '../../common/errors/prisma-error.mapper';
+import { getPageParams, toPageResult } from '../../common/utils/pagination';
+import { CreateMessageDto } from './dto/message.dto';
+import { toMessageDto, toMessageDtos } from './mappers/message.mapper';
+import { MessageRepository } from './repositories/message.repository';
 
 @Injectable()
 export class MessageService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly messages: MessageRepository) {}
 
   list() {
-    return this.prisma.message.findMany({ orderBy: { createdAt: 'desc' }, take: 100 });
+    return this.messages.listRecent().then(toMessageDtos);
+  }
+
+  async adminList(query: PageQueryDto) {
+    const { page, pageSize, skip, take } = getPageParams(query);
+    const [items, total] = await Promise.all([
+      this.messages.findPage(skip, take),
+      this.messages.count(),
+    ]);
+    return toPageResult(toMessageDtos(items), total, page, pageSize);
   }
 
   create(dto: CreateMessageDto) {
-    return this.prisma.message.create({ data: dto });
+    return this.messages.create(dto).then(toMessageDto);
   }
 
   async remove(id: number) {
-    const row = await this.prisma.message.findUnique({ where: { id } });
-    if (!row) throw new NotFoundException('Message not found');
-    await this.prisma.message.delete({ where: { id } });
-    return { ok: true };
+    try {
+      await this.messages.delete(id);
+      return { ok: true };
+    } catch (err) {
+      rethrowPrismaError(err, { notFound: 'Message not found' });
+    }
   }
 }
