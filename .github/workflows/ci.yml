@@ -29,6 +29,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Prisma Client
+        run: pnpm --filter @my-blog/server prisma:generate
+
+      - name: Build shared package
+        run: pnpm --filter @my-blog/shared build
+
       - name: Typecheck
         run: pnpm typecheck
 
