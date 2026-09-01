@@ -82,7 +82,7 @@ export default function Dashboard() {
 
       <div className="admin-bottom-grid">
         <DashboardRecentArticles articles={articles?.items ?? []} />
-        <DashboardCommentActivity messageCount={messageCount} />
+        <DashboardCommentActivity messageCount={messageCount} messages={messages?.items ?? []} />
       </div>
     </div>
   );
