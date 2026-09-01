@@ -8,5 +8,6 @@ import { SiteConfigService } from './site-config.service';
   imports: [AuditModule, ViewCountModule],
   controllers: [SiteController, SiteAdminController],
   providers: [SiteConfigService],
+  exports: [SiteConfigService],
 })
 export class SiteConfigModule {}

@@ -7,11 +7,14 @@ import { LoginDto } from './dto/auth.dto';
 @Injectable()
 export class AuthService implements OnModuleInit {
   private readonly logger = new Logger(AuthService.name);
+  private readonly prisma: PrismaService;
 
   constructor(
-    private readonly prisma: PrismaService,
+    prisma: PrismaService,
     private readonly jwt: JwtService,
-  ) {}
+  ) {
+    this.prisma = prisma ?? new PrismaService();
+  }
 
   /** 启动时播种管理员账号（单管理员） */
   async onModuleInit() {

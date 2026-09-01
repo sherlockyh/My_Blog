@@ -1,7 +1,27 @@
+import { randomUUID } from 'crypto';
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '../../../common/prisma/prisma.service';
 import { RedisService } from '../../../common/redis/redis.service';
+
+const RELEASE_LOCK_SCRIPT = `
+if redis.call('get', KEYS[1]) == ARGV[1] then
+  return redis.call('del', KEYS[1])
+end
+return 0
+`;
+
+const REMOVE_UNCHANGED_DIRTY_SCRIPT = `
+local dirtySetKey = KEYS[#KEYS]
+local counterCount = #KEYS - 1
+for i = 1, counterCount do
+  local id = ARGV[counterCount + i]
+  if redis.call('get', KEYS[i]) == ARGV[i] then
+    redis.call('srem', dirtySetKey, id)
+  end
+end
+return 1
+`;
 
 /**
  * 文章浏览量计数：Redis 为实时源，DB viewCount 为持久化基值。
@@ -13,7 +33,9 @@ import { RedisService } from '../../../common/redis/redis.service';
 export class ViewCountService implements OnModuleDestroy {
   private readonly logger = new Logger(ViewCountService.name);
   private readonly dirtySetKey = 'dirty:article_views';
+  private readonly flushLockKey = 'lock:article_views_flush';
   private readonly flushBatchSize = 200;
+  private readonly flushLockTtlSeconds = 300;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -27,20 +49,15 @@ export class ViewCountService implements OnModuleDestroy {
   /** 计数器不存在时用 DB 基值初始化 */
   private async ensure(ids: number[]) {
     if (!ids.length) return;
-    const pipeline = this.redis.client.pipeline();
-    ids.forEach((id) => pipeline.exists(this.key(id)));
-    const res = await pipeline.exec();
-    const missing: number[] = [];
-    res?.forEach((r, i) => {
-      if (!(r[1] as number)) missing.push(ids[i]);
-    });
+    const values = await this.redis.client.mget(ids.map((id) => this.key(id)));
+    const missing = ids.filter((_, i) => values[i] === null);
     if (!missing.length) return;
     const rows = await this.prisma.article.findMany({
       where: { id: { in: missing } },
       select: { id: true, viewCount: true },
     });
     const p2 = this.redis.client.pipeline();
-    rows.forEach((r) => p2.set(this.key(r.id), String(r.viewCount)));
+    rows.forEach((r) => p2.set(this.key(r.id), String(r.viewCount), 'NX'));
     await p2.exec();
   }
 
@@ -94,25 +111,55 @@ export class ViewCountService implements OnModuleDestroy {
 
   /** 将 Redis 计数器写回 DB */
   async flushToDb() {
-    const ids = (await this.redis.client.srandmember(this.dirtySetKey, this.flushBatchSize))
-      .map((id) => Number(id))
-      .filter((id) => Number.isInteger(id) && id > 0);
-    if (!ids.length) return;
-
-    const keys = ids.map((id) => this.key(id));
-    const values = await this.redis.client.mget(keys);
-    const updates = ids
-      .map((id, i) => ({ id, count: Number(values[i] ?? 0) }))
-      .filter((x) => Number.isFinite(x.id) && Number.isFinite(x.count));
-    if (!updates.length) return;
-    await this.prisma.$transaction(
-      updates.map((u) =>
-        this.prisma.article.updateMany({ where: { id: u.id }, data: { viewCount: u.count } }),
-      ),
+    const lockToken = randomUUID();
+    const acquired = await this.redis.client.set(
+      this.flushLockKey,
+      lockToken,
+      'EX',
+      this.flushLockTtlSeconds,
+      'NX',
     );
-    // DB 写入成功后再移除 dirty id；如果前面失败，集合保留，下一轮定时任务继续补刷。
-    await this.redis.client.srem(this.dirtySetKey, ...updates.map((u) => String(u.id)));
-    this.logger.log(`Flushed ${updates.length} article view counters to DB`);
+    if (!acquired) return;
+
+    try {
+      const ids = (await this.redis.client.srandmember(this.dirtySetKey, this.flushBatchSize))
+        .map((id) => Number(id))
+        .filter((id) => Number.isInteger(id) && id > 0);
+      if (!ids.length) return;
+
+      const keys = ids.map((id) => this.key(id));
+      const values = await this.redis.client.mget(keys);
+      const updates = ids
+        .map((id, i) => ({ id, count: Number(values[i]), expected: values[i] }))
+        .filter(
+          (x): x is { id: number; count: number; expected: string } =>
+            x.expected !== null && Number.isSafeInteger(x.count) && x.count >= 0,
+        );
+      if (!updates.length) return;
+
+      await this.prisma.$transaction(
+        updates.map((u) =>
+          this.prisma.article.updateMany({ where: { id: u.id }, data: { viewCount: u.count } }),
+        ),
+      );
+
+      // 只有 Redis 仍是本次快照时才清理 dirty，回写期间的新浏览量会保留标记等待下一轮。
+      await this.redis.client.eval(
+        REMOVE_UNCHANGED_DIRTY_SCRIPT,
+        updates.length + 1,
+        ...updates.map((u) => this.key(u.id)),
+        this.dirtySetKey,
+        ...updates.map((u) => u.expected),
+        ...updates.map((u) => String(u.id)),
+      );
+      this.logger.log(`Flushed ${updates.length} article view counters to DB`);
+    } finally {
+      try {
+        await this.redis.client.eval(RELEASE_LOCK_SCRIPT, 1, this.flushLockKey, lockToken);
+      } catch (err) {
+        this.logger.warn(`Release view flush lock failed: ${(err as Error).message}`);
+      }
+    }
   }
 
   /** 全站文章总浏览量（实时） */
@@ -143,10 +190,18 @@ export class ViewCountService implements OnModuleDestroy {
 
   @Cron(CronExpression.EVERY_5_MINUTES)
   async handleCron() {
-    await this.flushToDb();
+    try {
+      await this.flushToDb();
+    } catch (err) {
+      this.logger.error(`Flush article view counters failed: ${(err as Error).message}`);
+    }
   }
 
   async onModuleDestroy() {
-    await this.flushToDb();
+    try {
+      await this.flushToDb();
+    } catch (err) {
+      this.logger.error(`Flush article view counters on shutdown failed: ${(err as Error).message}`);
+    }
   }
 }

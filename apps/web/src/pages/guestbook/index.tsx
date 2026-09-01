@@ -64,7 +64,7 @@ export default function Guestbook() {
                   <span className="meta">{dayjs(m.createdAt).format('YYYY-MM-DD HH:mm')}</span>
                 </span>
               }
-              description={m.content}
+              description={<span className="guestbook-content">{m.content}</span>}
             />
           </List.Item>
         )}

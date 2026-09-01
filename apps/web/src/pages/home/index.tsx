@@ -3,6 +3,7 @@ import HeroSection from './components/HeroSection';
 import FeatureCards from './components/FeatureCards';
 import FeaturedProjects from './components/FeaturedProjects';
 import LatestArticles from './components/LatestArticles';
+import AiChat from './components/AiChat';
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       <FeatureCards />
       <FeaturedProjects />
       <LatestArticles />
+      <AiChat />
     </>
   );
 }

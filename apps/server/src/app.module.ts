@@ -18,6 +18,7 @@ import { SiteConfigModule } from './modules/site-config/site-config.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { ViewCountModule } from './modules/view-count/view-count.module';
 import { HealthModule } from './modules/health/health.module';
+import { AiModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { HealthModule } from './modules/health/health.module';
     RedisModule,
     ViewCountModule,
     HealthModule,
+    AiModule,
     AuthModule,
     ArticleModule,
     ProjectModule,
