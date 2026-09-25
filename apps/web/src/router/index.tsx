@@ -1,9 +1,9 @@
 import { Navigate, useRoutes, type RouteObject } from 'react-router-dom';
-import { adminRoutes } from './adminRoutes';
-import { publicRoutes } from './publicRoutes';
+import { adminRoutes } from '@/admin/routes';
+import { blogRoutes } from '@/blog/routes';
 
 const routes: RouteObject[] = [
-  ...publicRoutes,
+  ...blogRoutes,
   ...adminRoutes,
   { path: '*', element: <Navigate to="/" replace /> },
 ];
