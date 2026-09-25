@@ -4,5 +4,5 @@
     "sourceMap": false,
     "incremental": false
   },
-  "exclude": ["node_modules", "dist", "src/prisma/seed.ts"]
+  "exclude": ["node_modules", "dist", "prisma/seed.ts"]
 }

@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
+import { ArticleStatus } from '@my-blog/shared';
 
 const prisma = new PrismaClient();
 
@@ -61,7 +62,7 @@ Sub-packages reference each other via \`workspace:*\`; pnpm links them so edits 
 `,
     cover: '',
     tags: ['工程化', 'Monorepo'],
-    status: 'PUBLISHED',
+    status: ArticleStatus.PUBLISHED,
   },
   {
     slug: 'antd-dark-mode',
@@ -106,7 +107,7 @@ Toggling only flips a \`data-theme\` attribute on \`document.documentElement\`.
 `,
     cover: '',
     tags: ['前端', 'React'],
-    status: 'PUBLISHED',
+    status: ArticleStatus.PUBLISHED,
   },
   {
     slug: 'redis-view-counter',
@@ -144,7 +145,7 @@ The counter stores the **total** (initialized from DB on first miss), so after a
 `,
     cover: '',
     tags: ['后端', 'Redis'],
-    status: 'PUBLISHED',
+    status: ArticleStatus.PUBLISHED,
   },
   {
     slug: 'nestjs-rest-api',
@@ -171,7 +172,7 @@ NestJS core is **Module / Controller / Service**.
 `,
     cover: '',
     tags: ['后端', 'NestJS'],
-    status: 'DRAFT',
+    status: ArticleStatus.DRAFT,
   },
 ];
 
@@ -225,8 +226,8 @@ async function main() {
       update: {},
       create: {
         ...a,
-        status: a.status as any,
-        publishedAt: a.status === 'PUBLISHED' ? new Date() : null,
+        status: a.status,
+        publishedAt: a.status === ArticleStatus.PUBLISHED ? new Date() : null,
       },
     });
   }

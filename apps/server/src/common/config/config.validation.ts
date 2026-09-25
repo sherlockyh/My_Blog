@@ -1,4 +1,5 @@
-interface AppConfig {
+/** 全量环境变量契约：ConfigService<AppConfig> 由此获得类型提示 */
+export interface AppConfig {
   NODE_ENV?: string;
   DATABASE_URL?: string;
   REDIS_URL?: string;
@@ -43,7 +44,11 @@ export function validateConfig(config: AppConfig) {
 
   if (isProduction) {
     // 生产环境宁可启动失败，也不能带默认密钥上线；否则历史 token 伪造风险不可控。
-    if (!config.JWT_SECRET || config.JWT_SECRET === 'my-blog-jwt-secret' || config.JWT_SECRET === 'change-me') {
+    if (
+      !config.JWT_SECRET ||
+      config.JWT_SECRET === 'my-blog-jwt-secret' ||
+      config.JWT_SECRET === 'change-me'
+    ) {
       throw new Error('生产环境必须配置安全的 JWT_SECRET');
     }
     if (!config.CORS_ORIGIN) {
@@ -59,7 +64,9 @@ export function validateConfig(config: AppConfig) {
       throw new Error('生产环境必须配置 S3_PUBLIC_BASE_URL（浏览器直连 MinIO 的地址）');
     }
     // CORS 支持逗号分隔多域名，但每一项都必须是完整 URL，避免误填通配符或半截域名。
-    config.CORS_ORIGIN.split(',').forEach((origin) => assertUrl('CORS_ORIGIN', origin.trim(), true));
+    config.CORS_ORIGIN.split(',').forEach((origin) =>
+      assertUrl('CORS_ORIGIN', origin.trim(), true),
+    );
   }
 
   return config;

@@ -1,5 +1,12 @@
-import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { RequestContext } from '../types/request';
 import { RedisService } from '../redis/redis.service';
 import { RATE_LIMIT_KEY, RateLimitOptions } from './rate-limit.decorator';
 
@@ -29,10 +36,10 @@ export class RateLimitGuard implements CanActivate {
     return true;
   }
 
-  private buildKey(options: RateLimitOptions, req: any) {
+  private buildKey(options: RateLimitOptions, req: RequestContext) {
     const routeKey = options.name || `${req.method}:${req.route?.path || req.path}`;
     // main.ts 已开启 trust proxy；反向代理部署时 req.ip 会尽量使用真实客户端 IP。
-    const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+    const ip = req.ip || req.headers?.['x-forwarded-for'] || 'unknown';
     return `rate:${routeKey}:${ip}`;
   }
 }

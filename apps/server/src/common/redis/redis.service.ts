@@ -1,13 +1,15 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
+import type { AppConfig } from '../config/config.validation';
 
 @Injectable()
 export class RedisService implements OnModuleDestroy {
   private readonly logger = new Logger(RedisService.name);
   readonly client: Redis;
 
-  constructor() {
-    this.client = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  constructor(config: ConfigService<AppConfig>) {
+    this.client = new Redis(config.get<string>('REDIS_URL') || 'redis://localhost:6379', {
       // 控制单次请求重试次数，避免 Redis 故障时业务请求长时间挂起。
       maxRetriesPerRequest: 2,
     });

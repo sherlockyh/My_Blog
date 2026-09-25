@@ -1,6 +1,8 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'crypto';
 import { extname } from 'path';
+import type { AppConfig } from '../../common/config/config.validation';
 import {
   CreateBucketCommand,
   HeadBucketCommand,
@@ -19,18 +21,17 @@ export class StorageService implements OnModuleInit {
   private readonly publicBaseUrl: string;
   private ensureBucketPromise: Promise<void> | null = null;
 
-  constructor() {
-    this.bucket = process.env.S3_BUCKET || 'my-blog';
-    this.publicBaseUrl = (process.env.S3_PUBLIC_BASE_URL || 'http://localhost:9000').replace(
-      /\/+$/,
-      '',
-    );
+  constructor(config: ConfigService<AppConfig>) {
+    this.bucket = config.get<string>('S3_BUCKET') || 'my-blog';
+    this.publicBaseUrl = (
+      config.get<string>('S3_PUBLIC_BASE_URL') || 'http://localhost:9000'
+    ).replace(/\/+$/, '');
     this.client = new S3Client({
-      endpoint: process.env.S3_ENDPOINT || 'http://localhost:9000',
-      region: process.env.S3_REGION || 'us-east-1',
+      endpoint: config.get<string>('S3_ENDPOINT') || 'http://localhost:9000',
+      region: config.get<string>('S3_REGION') || 'us-east-1',
       credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY || '',
-        secretAccessKey: process.env.S3_SECRET_KEY || '',
+        accessKeyId: config.get<string>('S3_ACCESS_KEY') || '',
+        secretAccessKey: config.get<string>('S3_SECRET_KEY') || '',
       },
       // MinIO 自建服务必须用路径风格寻址（http://endpoint/{bucket}/{key}），虚拟主机风格会解析到错误域名。
       forcePathStyle: true,

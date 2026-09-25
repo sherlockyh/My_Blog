@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Query, Req } from '@nestjs/common';
+import { RequestContext } from '../../../common/types/request';
 import { ArticleService } from '../article.service';
 import { ArticleQueryDto } from '../dto/article.dto';
 
@@ -17,7 +18,7 @@ export class ArticleController {
   }
 
   @Get(':slug')
-  detail(@Param('slug') slug: string, @Req() req: any) {
-    return this.article.findBySlug(slug, req.ip);
+  detail(@Param('slug') slug: string, @Req() req: RequestContext) {
+    return this.article.findBySlug(slug, req.ip ?? 'unknown');
   }
 }

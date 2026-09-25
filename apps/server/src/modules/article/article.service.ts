@@ -26,7 +26,7 @@ export class ArticleService {
   /** 公开列表：仅已发布，合并 Redis 实时浏览量，不返回正文 */
   async listPublic(query: ArticleQueryDto) {
     const { page, pageSize, skip, take } = getPageParams(query);
-    const where: any = { status: ArticleStatus.PUBLISHED };
+    const where: Prisma.ArticleWhereInput = { status: ArticleStatus.PUBLISHED };
     if (query.tag) where.tags = { has: query.tag };
     if (query.keyword) {
       where.OR = [
@@ -44,7 +44,7 @@ export class ArticleService {
           { publishedAt: cursor.publishedAt, id: { lt: cursor.id } },
         ],
       };
-      let pageWhere = { ...where, ...cursorWhere };
+      let pageWhere: Prisma.ArticleWhereInput = { ...where, ...cursorWhere };
       if (where.OR) {
         const { OR, ...restWhere } = where;
         pageWhere = { ...restWhere, AND: [{ OR }, cursorWhere] };
@@ -104,7 +104,7 @@ export class ArticleService {
   /** 后台列表：数据会持续增长，保持服务端分页，避免管理页一次性拉取正文大字段。 */
   async adminList(query: AdminArticleQueryDto) {
     const { page, pageSize, skip, take } = getPageParams(query);
-    const where: any = {};
+    const where: Prisma.ArticleWhereInput = {};
     if (query.status) where.status = query.status;
     if (query.tag) where.tags = { has: query.tag };
     if (query.keyword) {

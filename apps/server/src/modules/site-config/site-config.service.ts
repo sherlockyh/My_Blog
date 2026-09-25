@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import {
   FeatureItem,
+  SocialLink,
   HeroConfig,
   ProfileDTO,
   SiteConfigDTO,
   SiteDTO,
   StatsDTO,
 } from '@my-blog/shared';
+import { Prisma } from '@prisma/client';
+import { asJson } from '../../common/utils/json';
 import { CACHE_KEYS, CACHE_TTL } from '../../common/redis/cache-keys';
 import { RedisService } from '../../common/redis/redis.service';
 import { PrismaService } from '../../common/prisma/prisma.service';
@@ -65,7 +68,7 @@ export class SiteConfigService {
 
     const site: SiteDTO = {
       config: {
-        hero: { ...DEFAULT_HERO, ...((configRow?.hero as any) ?? {}) },
+        hero: { ...DEFAULT_HERO, ...asJson<Partial<HeroConfig>>(configRow?.hero, {}) },
         features: normalizeFeatures(configRow?.features as unknown as FeatureItem[] | undefined),
         weatherCity: configRow?.weatherCity ?? 'Hangzhou',
         announcement: configRow?.announcement ?? '',
@@ -77,7 +80,7 @@ export class SiteConfigService {
             bioZh: profileRow.bioZh || DEFAULT_PROFILE.bioZh,
             bioEn: profileRow.bioEn || DEFAULT_PROFILE.bioEn,
             location: profileRow.location || DEFAULT_PROFILE.location,
-            socials: (profileRow.socials as any) ?? [],
+            socials: asJson<SocialLink[]>(profileRow.socials, []),
           }
         : DEFAULT_PROFILE,
     };
@@ -99,14 +102,14 @@ export class SiteConfigService {
       where: { id: 1 },
       create: {
         id: 1,
-        hero: next.hero as any,
-        features: next.features as any,
+        hero: next.hero as unknown as Prisma.InputJsonValue,
+        features: next.features as unknown as Prisma.InputJsonValue,
         weatherCity: next.weatherCity,
         announcement: next.announcement,
       },
       update: {
-        hero: next.hero as any,
-        features: next.features as any,
+        hero: next.hero as unknown as Prisma.InputJsonValue,
+        features: next.features as unknown as Prisma.InputJsonValue,
         weatherCity: next.weatherCity,
         announcement: next.announcement,
       },
@@ -127,7 +130,7 @@ export class SiteConfigService {
         bioZh: next.bioZh,
         bioEn: next.bioEn,
         location: next.location,
-        socials: next.socials as any,
+        socials: next.socials as unknown as Prisma.InputJsonValue,
       },
       update: {
         name: next.name,
@@ -135,7 +138,7 @@ export class SiteConfigService {
         bioZh: next.bioZh,
         bioEn: next.bioEn,
         location: next.location,
-        socials: next.socials as any,
+        socials: next.socials as unknown as Prisma.InputJsonValue,
       },
     });
     await this.redis.cacheDel(CACHE_KEYS.site);
