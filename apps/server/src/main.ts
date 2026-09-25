@@ -3,9 +3,10 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import type { NextFunction, Request, Response } from 'express';
-import { mkdirSync } from 'fs';
 import { AppModule } from './app.module';
 
+// 上传图片走浏览器直连 MinIO，img-src 必须放行其公开地址（格式已在 config.validation 校验）。
+const s3PublicOrigin = new URL(process.env.S3_PUBLIC_BASE_URL || 'http://localhost:9000').origin;
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -14,13 +15,12 @@ const CONTENT_SECURITY_POLICY = [
   "form-action 'self'",
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https:",
+  `img-src 'self' data: https: ${s3PublicOrigin}`,
   "font-src 'self' data:",
   "connect-src 'self' http://localhost:5173 http://localhost:7001 ws://localhost:5173",
 ].join('; ');
 
 async function bootstrap() {
-  mkdirSync('uploads', { recursive: true });
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { bodyParser: false });
   const expressApp = app.getHttpAdapter().getInstance();
   expressApp.set('trust proxy', 1);

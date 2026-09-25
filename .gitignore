@@ -7,3 +7,6 @@ uploads/
 *.log
 .DS_Store
 coverage/
+
+# ZCode 本地工具目录
+.zcode/
