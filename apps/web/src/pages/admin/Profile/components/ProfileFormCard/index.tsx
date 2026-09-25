@@ -31,11 +31,15 @@ export default function ProfileFormCard({ avatar, onUploadAvatar, onDirty }: Pro
   return (
     <Card className="admin-panel admin-profile-form">
       <div className="admin-panel-title">
-        <span><UserOutlined /></span>
+        <span>
+          <UserOutlined />
+        </span>
         <h2>{t('admin.basicInfo')}</h2>
       </div>
       <div className="admin-form-row admin-avatar-row">
-        <span className="admin-form-icon"><UserOutlined /></span>
+        <span className="admin-form-icon">
+          <UserOutlined />
+        </span>
         <Form.Item label={t('admin.avatar')}>
           <Space>
             <Avatar src={avatar} size={64} />
@@ -46,25 +50,33 @@ export default function ProfileFormCard({ avatar, onUploadAvatar, onDirty }: Pro
         </Form.Item>
       </div>
       <div className="admin-form-row">
-        <span className="admin-form-icon"><UserOutlined /></span>
+        <span className="admin-form-icon">
+          <UserOutlined />
+        </span>
         <Form.Item name="name" label={t('admin.name')}>
           <Input size="large" />
         </Form.Item>
       </div>
       <div className="admin-form-row">
-        <span className="admin-form-icon"><EnvironmentOutlined /></span>
+        <span className="admin-form-icon">
+          <EnvironmentOutlined />
+        </span>
         <Form.Item name="location" label={t('admin.location')}>
           <Input size="large" />
         </Form.Item>
       </div>
       <div className="admin-form-row">
-        <span className="admin-form-icon"><MailOutlined /></span>
+        <span className="admin-form-icon">
+          <MailOutlined />
+        </span>
         <Form.Item name="bioZh" label={t('admin.bioZh')}>
           <Input.TextArea rows={3} />
         </Form.Item>
       </div>
       <div className="admin-form-row">
-        <span className="admin-form-icon"><MailOutlined /></span>
+        <span className="admin-form-icon">
+          <MailOutlined />
+        </span>
         <Form.Item name="bioEn" label={t('admin.bioEn')}>
           <Input.TextArea rows={3} />
         </Form.Item>
@@ -73,7 +85,9 @@ export default function ProfileFormCard({ avatar, onUploadAvatar, onDirty }: Pro
       <div className="admin-divider" />
 
       <div className="admin-panel-title">
-        <span><LinkOutlined /></span>
+        <span>
+          <LinkOutlined />
+        </span>
         <h2>{t('admin.socials')}</h2>
       </div>
       <Form.List name="socials">

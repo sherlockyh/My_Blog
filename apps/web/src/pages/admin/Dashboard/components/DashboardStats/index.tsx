@@ -1,6 +1,11 @@
 // 组件用途：展示后台核心统计卡片。
 import { Card } from 'antd';
-import { FileTextOutlined, MessageOutlined, ProjectOutlined, ShareAltOutlined } from '@ant-design/icons';
+import {
+  FileTextOutlined,
+  MessageOutlined,
+  ProjectOutlined,
+  ShareAltOutlined,
+} from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 interface DashboardStatsProps {
@@ -25,15 +30,21 @@ export default function DashboardStats({
   return (
     <div className="admin-stat-grid">
       <Card className="admin-stat-card admin-stat-blue">
-        <span className="admin-stat-icon"><FileTextOutlined /></span>
+        <span className="admin-stat-icon">
+          <FileTextOutlined />
+        </span>
         <div>
           <p>{t('admin.articleCount')}</p>
           <strong>{totalArticles}</strong>
-          <span>{t('admin.publishedWithDraft', { published: publishedCount, draft: draftCount })}</span>
+          <span>
+            {t('admin.publishedWithDraft', { published: publishedCount, draft: draftCount })}
+          </span>
         </div>
       </Card>
       <Card className="admin-stat-card admin-stat-green">
-        <span className="admin-stat-icon"><ProjectOutlined /></span>
+        <span className="admin-stat-icon">
+          <ProjectOutlined />
+        </span>
         <div>
           <p>{t('admin.projectCount')}</p>
           <strong>{projectCount}</strong>
@@ -41,7 +52,9 @@ export default function DashboardStats({
         </div>
       </Card>
       <Card className="admin-stat-card admin-stat-purple">
-        <span className="admin-stat-icon"><ShareAltOutlined /></span>
+        <span className="admin-stat-icon">
+          <ShareAltOutlined />
+        </span>
         <div>
           <p>{t('admin.resourceCount')}</p>
           <strong>{resourceCount}</strong>
@@ -49,7 +62,9 @@ export default function DashboardStats({
         </div>
       </Card>
       <Card className="admin-stat-card admin-stat-orange">
-        <span className="admin-stat-icon"><MessageOutlined /></span>
+        <span className="admin-stat-icon">
+          <MessageOutlined />
+        </span>
         <div>
           <p>{t('admin.messageCount')}</p>
           <strong>{messageCount}</strong>

@@ -34,11 +34,25 @@ export default function ArticleContentTabs({
             label: t('admin.zhTab'),
             children: (
               <div className="admin-language-panel">
-                <Form.Item name="titleZh" label={t('admin.articleTitle')} rules={[{ required: true }]}>
-                  <Input size="large" placeholder={t('admin.titlePlaceholder')} disabled={isViewMode} />
+                <Form.Item
+                  name="titleZh"
+                  label={t('admin.articleTitle')}
+                  rules={[{ required: true }]}
+                >
+                  <Input
+                    size="large"
+                    placeholder={t('admin.titlePlaceholder')}
+                    disabled={isViewMode}
+                  />
                 </Form.Item>
                 <Form.Item name="summaryZh" label={t('admin.summary')}>
-                  <Input.TextArea rows={3} showCount maxLength={180} placeholder={t('admin.summaryPlaceholder')} disabled={isViewMode} />
+                  <Input.TextArea
+                    rows={3}
+                    showCount
+                    maxLength={180}
+                    placeholder={t('admin.summaryPlaceholder')}
+                    disabled={isViewMode}
+                  />
                 </Form.Item>
                 <ContentEditor
                   value={contentZh}
@@ -55,10 +69,20 @@ export default function ArticleContentTabs({
             children: (
               <div className="admin-language-panel">
                 <Form.Item name="titleEn" label={t('admin.articleTitle')}>
-                  <Input size="large" placeholder={t('admin.titlePlaceholder')} disabled={isViewMode} />
+                  <Input
+                    size="large"
+                    placeholder={t('admin.titlePlaceholder')}
+                    disabled={isViewMode}
+                  />
                 </Form.Item>
                 <Form.Item name="summaryEn" label={t('admin.summary')}>
-                  <Input.TextArea rows={3} showCount maxLength={180} placeholder={t('admin.summaryPlaceholder')} disabled={isViewMode} />
+                  <Input.TextArea
+                    rows={3}
+                    showCount
+                    maxLength={180}
+                    placeholder={t('admin.summaryPlaceholder')}
+                    disabled={isViewMode}
+                  />
                 </Form.Item>
                 <ContentEditor
                   value={contentEn}

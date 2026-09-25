@@ -11,8 +11,6 @@ export interface ApiBody<T> {
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<T, ApiBody<T>> {
   intercept(_context: ExecutionContext, next: CallHandler<T>): Observable<ApiBody<T>> {
-    return next.handle().pipe(
-      map((data) => ({ code: 0, data, message: 'ok' })),
-    );
+    return next.handle().pipe(map((data) => ({ code: 0, data, message: 'ok' })));
   }
 }

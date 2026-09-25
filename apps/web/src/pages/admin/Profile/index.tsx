@@ -73,7 +73,9 @@ export default function AdminProfile() {
     <div className="admin-page admin-profile-page">
       <div className="admin-page-head">
         <div className="admin-title-with-icon">
-          <span><UserOutlined /></span>
+          <span>
+            <UserOutlined />
+          </span>
           <div>
             <h1>{t('admin.profile')}</h1>
             <p>{t('admin.profileDesc')}</p>
@@ -81,13 +83,26 @@ export default function AdminProfile() {
         </div>
       </div>
 
-      <Form form={form} layout="vertical" requiredMark={false} onValuesChange={() => setDirty(true)}>
+      <Form
+        form={form}
+        layout="vertical"
+        requiredMark={false}
+        onValuesChange={() => setDirty(true)}
+      >
         <div className="admin-profile-grid">
-          <ProfileFormCard avatar={avatar} onUploadAvatar={uploadAvatar} onDirty={() => setDirty(true)} />
+          <ProfileFormCard
+            avatar={avatar}
+            onUploadAvatar={uploadAvatar}
+            onDirty={() => setDirty(true)}
+          />
           <AccountOverviewCard form={form} avatar={avatar} />
         </div>
       </Form>
-      <ProfileFooterActions saving={saving} onReset={() => confirmDirty(resetProfile)} onSave={save} />
+      <ProfileFooterActions
+        saving={saving}
+        onReset={() => confirmDirty(resetProfile)}
+        onSave={save}
+      />
     </div>
   );
 }

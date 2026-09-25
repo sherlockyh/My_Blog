@@ -11,7 +11,8 @@ http.interceptors.request.use((config) => {
 
 /** 服务端统一 { code, data, message }，这里解包出 data */
 http.interceptors.response.use(
-  (res) => (res.data && typeof res.data === 'object' && 'code' in res.data ? res.data.data : res.data),
+  (res) =>
+    res.data && typeof res.data === 'object' && 'code' in res.data ? res.data.data : res.data,
   (err) => {
     const status = err.response?.status;
     // 登录接口自身的 401 是"账号密码错误"，交由登录页提示；只拦截后台页面的会话过期。
@@ -25,10 +26,12 @@ http.interceptors.response.use(
 );
 
 export const request = {
-  get: <T>(url: string, config?: Parameters<typeof http.get>[1]) => http.get<unknown, T>(url, config),
+  get: <T>(url: string, config?: Parameters<typeof http.get>[1]) =>
+    http.get<unknown, T>(url, config),
   post: <T>(url: string, data?: unknown, config?: Parameters<typeof http.post>[2]) =>
     http.post<unknown, T>(url, data, config),
   put: <T>(url: string, data?: unknown, config?: Parameters<typeof http.put>[2]) =>
     http.put<unknown, T>(url, data, config),
-  delete: <T>(url: string, config?: Parameters<typeof http.delete>[1]) => http.delete<unknown, T>(url, config),
+  delete: <T>(url: string, config?: Parameters<typeof http.delete>[1]) =>
+    http.delete<unknown, T>(url, config),
 };

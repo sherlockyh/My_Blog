@@ -11,26 +11,37 @@ interface DashboardCommentActivityProps {
   messages: MessageDTO[];
 }
 
-export default function DashboardCommentActivity({ messageCount, messages }: DashboardCommentActivityProps) {
+export default function DashboardCommentActivity({
+  messageCount,
+  messages,
+}: DashboardCommentActivityProps) {
   const { t } = useTranslation();
   const latestMessages = messages.slice(0, 4);
 
   return (
     <Card className="admin-panel">
       <div className="admin-panel-title admin-panel-title-between">
-        <span><MessageOutlined /></span>
+        <span>
+          <MessageOutlined />
+        </span>
         <h2>{t('admin.commentActivity')}</h2>
-        <Link to="/admin/messages">{t('home.viewAll')} <RightOutlined /></Link>
+        <Link to="/admin/messages">
+          {t('home.viewAll')} <RightOutlined />
+        </Link>
       </div>
       {latestMessages.length ? (
         <div className="admin-recent-list">
           {latestMessages.map((message) => (
             <div className="admin-recent-item" key={message.id}>
-              <div className="admin-article-cover"><MessageOutlined /></div>
+              <div className="admin-article-cover">
+                <MessageOutlined />
+              </div>
               <div>
                 <strong>{message.nickname}</strong>
                 <p>
-                  {message.content.length > 48 ? `${message.content.slice(0, 48)}...` : message.content}
+                  {message.content.length > 48
+                    ? `${message.content.slice(0, 48)}...`
+                    : message.content}
                   {' · '}
                   {dayjs(message.createdAt).format('YYYY/MM/DD HH:mm')}
                 </p>

@@ -4,7 +4,11 @@ import type { ReactNode } from 'react';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import type { Key } from 'antd/es/table/interface';
 import AdminLoadError from '@/components/admin/AdminLoadError';
-import FilterBar, { type FilterField, type FilterValue, type FilterValues } from './components/FilterBar';
+import FilterBar, {
+  type FilterField,
+  type FilterValue,
+  type FilterValues,
+} from './components/FilterBar';
 import './styles/index.less';
 
 interface ListPageProps<T extends object> {

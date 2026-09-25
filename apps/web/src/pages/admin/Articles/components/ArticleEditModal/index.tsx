@@ -25,7 +25,13 @@ interface ArticleEditModalProps {
   onSaved: () => void;
 }
 
-export default function ArticleEditModal({ open, mode, articleId, onClose, onSaved }: ArticleEditModalProps) {
+export default function ArticleEditModal({
+  open,
+  mode,
+  articleId,
+  onClose,
+  onSaved,
+}: ArticleEditModalProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [contentZh, setContentZh] = useState('');
@@ -49,7 +55,10 @@ export default function ArticleEditModal({ open, mode, articleId, onClose, onSav
 
   useEffect(() => {
     if (!open) return;
-    articleApi.articleTags().then(setExistingTags).catch(() => setExistingTags([]));
+    articleApi
+      .articleTags()
+      .then(setExistingTags)
+      .catch(() => setExistingTags([]));
   }, [open]);
 
   useEffect(() => {
@@ -128,7 +137,9 @@ export default function ArticleEditModal({ open, mode, articleId, onClose, onSav
   return (
     <Modal
       open={open}
-      title={isViewMode ? t('admin.viewArticle') : isNew ? t('admin.newArticle') : t('admin.editArticle')}
+      title={
+        isViewMode ? t('admin.viewArticle') : isNew ? t('admin.newArticle') : t('admin.editArticle')
+      }
       width={1280}
       centered
       onCancel={close}
@@ -139,7 +150,13 @@ export default function ArticleEditModal({ open, mode, articleId, onClose, onSav
         <>
           <Button onClick={close}>{isViewMode ? t('common.close') : t('common.cancel')}</Button>
           {!isViewMode && (
-            <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={save} className="btn-gradient">
+            <Button
+              type="primary"
+              icon={<SaveOutlined />}
+              loading={saving}
+              onClick={save}
+              className="btn-gradient"
+            >
               {t('admin.save')}
             </Button>
           )}

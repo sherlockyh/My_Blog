@@ -1,7 +1,10 @@
 import type { Article } from '@prisma/client';
 import type { ArticleListRow } from '../repositories/article.repository';
 
-export function withViewCount<T extends { id: number; viewCount: number }>(row: T, views: Record<number, number>) {
+export function withViewCount<T extends { id: number; viewCount: number }>(
+  row: T,
+  views: Record<number, number>,
+) {
   return { ...row, viewCount: views[row.id] ?? row.viewCount };
 }
 

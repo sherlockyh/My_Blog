@@ -31,9 +31,21 @@ export default function About() {
   const profileName = profile?.name || 'yh';
   const bio = pick(profile?.bioZh, profile?.bioEn) || t('aboutPage.bioFallback');
   const focusItems = [
-    { icon: <CodeOutlined />, title: t('aboutPage.focusFrontend'), desc: t('aboutPage.focusFrontendDesc') },
-    { icon: <BulbOutlined />, title: t('aboutPage.focusExperience'), desc: t('aboutPage.focusExperienceDesc') },
-    { icon: <ReadOutlined />, title: t('aboutPage.focusWriting'), desc: t('aboutPage.focusWritingDesc') },
+    {
+      icon: <CodeOutlined />,
+      title: t('aboutPage.focusFrontend'),
+      desc: t('aboutPage.focusFrontendDesc'),
+    },
+    {
+      icon: <BulbOutlined />,
+      title: t('aboutPage.focusExperience'),
+      desc: t('aboutPage.focusExperienceDesc'),
+    },
+    {
+      icon: <ReadOutlined />,
+      title: t('aboutPage.focusWriting'),
+      desc: t('aboutPage.focusWritingDesc'),
+    },
   ];
   const stats = [
     { value: 'React', label: t('aboutPage.stack') },
@@ -66,7 +78,13 @@ export default function About() {
             </div>
             <div className="about-page-socials">
               {(profile?.socials || []).slice(0, 4).map((item) => (
-                <a key={`${item.label}-${item.url}`} href={item.url} target="_blank" rel="noreferrer" aria-label={item.label}>
+                <a
+                  key={`${item.label}-${item.url}`}
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={item.label}
+                >
                   {getSocialIcon(item.label, item.url)}
                   <span>{item.label}</span>
                 </a>

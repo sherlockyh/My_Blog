@@ -16,19 +16,34 @@ export default function DashboardRecentArticles({ articles }: DashboardRecentArt
   return (
     <Card className="admin-panel">
       <div className="admin-panel-title admin-panel-title-between">
-        <span><FileTextOutlined /></span>
+        <span>
+          <FileTextOutlined />
+        </span>
         <h2>{t('admin.recentArticles')}</h2>
-        <Link to="/admin/articles">{t('home.viewAll')} <RightOutlined /></Link>
+        <Link to="/admin/articles">
+          {t('home.viewAll')} <RightOutlined />
+        </Link>
       </div>
       <div className="admin-recent-list">
         {articles.map((article) => (
           <div className="admin-recent-item" key={article.id}>
-            <div className="admin-article-cover">{(article.titleZh || article.titleEn || 'A').slice(0, 2)}</div>
+            <div className="admin-article-cover">
+              {(article.titleZh || article.titleEn || 'A').slice(0, 2)}
+            </div>
             <div>
               <strong>{article.titleZh || article.titleEn}</strong>
-              <p>{article.slug} · {t('admin.views')} {article.viewCount} · {dayjs(article.updatedAt).format('YYYY/MM/DD HH:mm')}</p>
+              <p>
+                {article.slug} · {t('admin.views')} {article.viewCount} ·{' '}
+                {dayjs(article.updatedAt).format('YYYY/MM/DD HH:mm')}
+              </p>
             </div>
-            <span className={article.status === ArticleStatus.PUBLISHED ? 'admin-status published' : 'admin-status draft'}>
+            <span
+              className={
+                article.status === ArticleStatus.PUBLISHED
+                  ? 'admin-status published'
+                  : 'admin-status draft'
+              }
+            >
               {article.status === ArticleStatus.PUBLISHED ? t('admin.published') : t('admin.draft')}
             </span>
           </div>

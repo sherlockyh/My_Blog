@@ -9,14 +9,26 @@ interface ProfileFooterActionsProps {
   onSave: () => void;
 }
 
-export default function ProfileFooterActions({ saving, onReset, onSave }: ProfileFooterActionsProps) {
+export default function ProfileFooterActions({
+  saving,
+  onReset,
+  onSave,
+}: ProfileFooterActionsProps) {
   const { t } = useTranslation();
 
   return (
     <div className="admin-fixed-bottom-bar">
       <div className="admin-fixed-bottom-actions">
-        <Button icon={<ReloadOutlined />} onClick={onReset}>{t('admin.reset')}</Button>
-        <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={onSave} className="btn-gradient">
+        <Button icon={<ReloadOutlined />} onClick={onReset}>
+          {t('admin.reset')}
+        </Button>
+        <Button
+          type="primary"
+          icon={<SaveOutlined />}
+          loading={saving}
+          onClick={onSave}
+          className="btn-gradient"
+        >
           {t('admin.save')}
         </Button>
       </div>

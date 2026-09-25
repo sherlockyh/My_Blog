@@ -11,7 +11,12 @@ interface ContentEditorProps {
   readOnly?: boolean;
 }
 
-export default function ContentEditor({ value, onChange, onPreview, readOnly }: ContentEditorProps) {
+export default function ContentEditor({
+  value,
+  onChange,
+  onPreview,
+  readOnly,
+}: ContentEditorProps) {
   const { t } = useTranslation();
 
   return (
@@ -25,7 +30,11 @@ export default function ContentEditor({ value, onChange, onPreview, readOnly }: 
         </div>
         {readOnly ? (
           <div className="admin-markdown-preview admin-markdown-viewer">
-            {value ? <MDEditor.Markdown source={value} /> : <p className="admin-preview-empty">{t('articles.emptyContent')}</p>}
+            {value ? (
+              <MDEditor.Markdown source={value} />
+            ) : (
+              <p className="admin-preview-empty">{t('articles.emptyContent')}</p>
+            )}
           </div>
         ) : (
           <MDEditor

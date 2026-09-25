@@ -1,4 +1,10 @@
-import type { ArticleStatus, FeatureItem, HeroConfig, ProfileDTO, SocialLink } from '@my-blog/shared';
+import type {
+  ArticleStatus,
+  FeatureItem,
+  HeroConfig,
+  ProfileDTO,
+  SocialLink,
+} from '@my-blog/shared';
 
 export interface ArticleQuery {
   page?: number;

@@ -16,6 +16,11 @@ export function getPageParams(query: PageLike = {}) {
   };
 }
 
-export function toPageResult<T>(items: T[], total: number, page: number, pageSize: number): PageResult<T> {
+export function toPageResult<T>(
+  items: T[],
+  total: number,
+  page: number,
+  pageSize: number,
+): PageResult<T> {
   return { items, total, page, pageSize };
 }

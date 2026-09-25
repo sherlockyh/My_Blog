@@ -10,11 +10,12 @@ interface ThemeState {
 
 export const useThemeStore = create<ThemeState>((set) => ({
   theme: (localStorage.getItem('blog-theme') as Theme) || 'light',
-  toggle: () => set((state) => {
-    const theme: Theme = state.theme === 'light' ? 'dark' : 'light';
-    localStorage.setItem('blog-theme', theme);
-    return { theme };
-  }),
+  toggle: () =>
+    set((state) => {
+      const theme: Theme = state.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('blog-theme', theme);
+      return { theme };
+    }),
   setTheme: (theme) => {
     localStorage.setItem('blog-theme', theme);
     set({ theme });

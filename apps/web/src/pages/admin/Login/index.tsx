@@ -1,6 +1,11 @@
 // 页面用途：提供后台管理员登录入口。
 import { Button, Form, Input, message } from 'antd';
-import { FileTextOutlined, LockOutlined, SafetyCertificateOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  FileTextOutlined,
+  LockOutlined,
+  SafetyCertificateOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authApi } from '@/services/auth';
@@ -78,9 +83,19 @@ export default function AdminLogin() {
                 <Input size="large" prefix={<UserOutlined />} autoComplete="username" />
               </Form.Item>
               <Form.Item name="password" label={t('admin.password')} rules={[{ required: true }]}>
-                <Input.Password size="large" prefix={<LockOutlined />} autoComplete="current-password" />
+                <Input.Password
+                  size="large"
+                  prefix={<LockOutlined />}
+                  autoComplete="current-password"
+                />
               </Form.Item>
-              <Button type="primary" htmlType="submit" block size="large" className="btn-gradient admin-login-submit">
+              <Button
+                type="primary"
+                htmlType="submit"
+                block
+                size="large"
+                className="btn-gradient admin-login-submit"
+              >
                 {t('admin.loginBtn')}
               </Button>
             </Form>

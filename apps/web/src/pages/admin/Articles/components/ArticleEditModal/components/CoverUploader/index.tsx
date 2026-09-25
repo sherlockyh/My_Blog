@@ -10,7 +10,12 @@ interface CoverUploaderProps {
   onUploadCover: (file: File) => boolean | Promise<boolean>;
 }
 
-export default function CoverUploader({ cover, isViewMode, onCoverChange, onUploadCover }: CoverUploaderProps) {
+export default function CoverUploader({
+  cover,
+  isViewMode,
+  onCoverChange,
+  onUploadCover,
+}: CoverUploaderProps) {
   const { t } = useTranslation();
 
   return (
@@ -28,7 +33,9 @@ export default function CoverUploader({ cover, isViewMode, onCoverChange, onUplo
       <Space direction="vertical" size={12} className="admin-cover-actions">
         {!isViewMode && (
           <Upload accept="image/*" showUploadList={false} beforeUpload={onUploadCover}>
-            <Button block icon={<UploadOutlined />}>{t('admin.uploadCover')}</Button>
+            <Button block icon={<UploadOutlined />}>
+              {t('admin.uploadCover')}
+            </Button>
           </Upload>
         )}
         <Input

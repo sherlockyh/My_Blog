@@ -41,8 +41,9 @@ export default function AdminLayout() {
   const selected =
     [...items]
       .sort((a, b) => b.key.length - a.key.length)
-      .find((i) => (i.key === '/admin' ? location.pathname === '/admin' : location.pathname.startsWith(i.key)))?.key ||
-    '/admin';
+      .find((i) =>
+        i.key === '/admin' ? location.pathname === '/admin' : location.pathname.startsWith(i.key),
+      )?.key || '/admin';
 
   const confirmLeave = () => {
     if (!dirty) return true;
@@ -66,7 +67,12 @@ export default function AdminLayout() {
             <span>J</span>
             <strong>Code with Joy</strong>
           </div>
-          <Menu mode="inline" selectedKeys={[selected]} items={items} onClick={({ key }) => guardedNavigate(String(key))} />
+          <Menu
+            mode="inline"
+            selectedKeys={[selected]}
+            items={items}
+            onClick={({ key }) => guardedNavigate(String(key))}
+          />
         </Layout.Sider>
         <Layout>
           <Layout.Header className="admin-header">

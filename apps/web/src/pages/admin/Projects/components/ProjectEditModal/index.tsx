@@ -1,6 +1,17 @@
 // 组件用途：承载项目新增、编辑和查看弹窗。
 import { useEffect, useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal, Select, Space, Switch, Upload, message } from 'antd';
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  Space,
+  Switch,
+  Upload,
+  message,
+} from 'antd';
 import { CloseOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import type { ProjectDTO } from '@my-blog/shared';
@@ -19,7 +30,13 @@ interface ProjectEditModalProps {
   onSaved: () => void;
 }
 
-export default function ProjectEditModal({ open, mode, project, onClose, onSaved }: ProjectEditModalProps) {
+export default function ProjectEditModal({
+  open,
+  mode,
+  project,
+  onClose,
+  onSaved,
+}: ProjectEditModalProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [cover, setCover] = useState('');
@@ -73,27 +90,40 @@ export default function ProjectEditModal({ open, mode, project, onClose, onSaved
   return (
     <Modal
       open={open}
-      title={isViewMode ? t('admin.viewProject') : project ? t('admin.editProject') : t('admin.newProject')}
+      title={
+        isViewMode
+          ? t('admin.viewProject')
+          : project
+            ? t('admin.editProject')
+            : t('admin.newProject')
+      }
       onOk={save}
       onCancel={close}
-      footer={isViewMode ? (
-        <Button icon={<CloseOutlined />} onClick={close}>
-          {t('common.close')}
-        </Button>
-      ) : (
-        <>
+      footer={
+        isViewMode ? (
           <Button icon={<CloseOutlined />} onClick={close}>
-            {t('common.cancel')}
+            {t('common.close')}
           </Button>
-          <Button type="primary" icon={<SaveOutlined />} onClick={save} className="btn-gradient">
-            {t('admin.save')}
-          </Button>
-        </>
-      )}
+        ) : (
+          <>
+            <Button icon={<CloseOutlined />} onClick={close}>
+              {t('common.cancel')}
+            </Button>
+            <Button type="primary" icon={<SaveOutlined />} onClick={save} className="btn-gradient">
+              {t('admin.save')}
+            </Button>
+          </>
+        )
+      }
       className="admin-edit-modal"
       destroyOnClose
     >
-      <Form form={form} layout="vertical" initialValues={{ featured: false, sort: 0, tags: [] }} onValuesChange={() => setDirty(!isViewMode)}>
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={{ featured: false, sort: 0, tags: [] }}
+        onValuesChange={() => setDirty(!isViewMode)}
+      >
         <Form.Item name="titleZh" label={t('admin.titleZh')} rules={[{ required: true }]}>
           <Input disabled={isViewMode} />
         </Form.Item>

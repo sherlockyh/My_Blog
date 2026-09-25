@@ -1,5 +1,10 @@
 // 组件用途：展示文章详情页左侧分类切换栏。
-import { FileTextOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  FileTextOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 import { TreeSelect } from 'antd';
 import type { TreeSelectProps } from 'antd';
 import { useTranslation } from 'react-i18next';

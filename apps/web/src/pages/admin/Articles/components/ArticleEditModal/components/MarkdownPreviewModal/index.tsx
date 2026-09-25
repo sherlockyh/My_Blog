@@ -9,7 +9,11 @@ interface MarkdownPreviewModalProps {
   onClose: () => void;
 }
 
-export default function MarkdownPreviewModal({ open, content, onClose }: MarkdownPreviewModalProps) {
+export default function MarkdownPreviewModal({
+  open,
+  content,
+  onClose,
+}: MarkdownPreviewModalProps) {
   const { t } = useTranslation();
 
   return (

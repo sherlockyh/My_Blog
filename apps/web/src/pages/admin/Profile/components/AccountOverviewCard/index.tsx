@@ -16,7 +16,9 @@ export default function AccountOverviewCard({ form, avatar }: AccountOverviewCar
   return (
     <Card className="admin-panel admin-account-card">
       <div className="admin-panel-title">
-        <span><SafetyCertificateOutlined /></span>
+        <span>
+          <SafetyCertificateOutlined />
+        </span>
         <h2>{t('admin.accountOverview')}</h2>
       </div>
       <div className="admin-account-avatar">
@@ -26,17 +28,23 @@ export default function AccountOverviewCard({ form, avatar }: AccountOverviewCar
       </div>
       <div className="admin-account-list">
         <div>
-          <span><MailOutlined /></span>
+          <span>
+            <MailOutlined />
+          </span>
           <p>{t('admin.email')}</p>
           <strong>admin@myblog.local</strong>
         </div>
         <div>
-          <span><UserOutlined /></span>
+          <span>
+            <UserOutlined />
+          </span>
           <p>{t('admin.accountRole')}</p>
           <strong>{t('admin.adminRole')}</strong>
         </div>
         <div>
-          <span><SafetyCertificateOutlined /></span>
+          <span>
+            <SafetyCertificateOutlined />
+          </span>
           <p>{t('admin.accountStatus')}</p>
           <strong className="admin-account-normal">{t('admin.normal')}</strong>
         </div>

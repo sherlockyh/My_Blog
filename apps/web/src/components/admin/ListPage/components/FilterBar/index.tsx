@@ -30,7 +30,15 @@ interface FilterBarProps {
   onReset: () => void;
 }
 
-export default function FilterBar({ fields, values, searchText, resetText, onChange, onSearch, onReset }: FilterBarProps) {
+export default function FilterBar({
+  fields,
+  values,
+  searchText,
+  resetText,
+  onChange,
+  onSearch,
+  onReset,
+}: FilterBarProps) {
   if (!fields.length) return null;
 
   return (
@@ -58,7 +66,12 @@ export default function FilterBar({ fields, values, searchText, resetText, onCha
         </div>
       ))}
       <div className="admin-filter-actions">
-        <Button type="primary" icon={<SearchOutlined />} className="btn-gradient" onClick={onSearch}>
+        <Button
+          type="primary"
+          icon={<SearchOutlined />}
+          className="btn-gradient"
+          onClick={onSearch}
+        >
           {searchText}
         </Button>
         <Button icon={<ReloadOutlined />} onClick={onReset}>

@@ -22,7 +22,10 @@ export default function ArticleCard({ article, variant = 'featured' }: ArticleCa
   const tagStyleKey = TAG_STYLE_KEYS[article.id % TAG_STYLE_KEYS.length];
 
   return (
-    <Link to={`/articles/${article.slug}`} className={`card blog-article-card blog-article-card-${variant}`}>
+    <Link
+      to={`/articles/${article.slug}`}
+      className={`card blog-article-card blog-article-card-${variant}`}
+    >
       <div className={`blog-article-cover blog-cover-${tagStyleKey}`}>
         {article.cover ? (
           <img src={article.cover} alt={title} loading="lazy" />
@@ -35,7 +38,9 @@ export default function ArticleCard({ article, variant = 'featured' }: ArticleCa
       <div className="blog-article-body">
         <div className="blog-article-tags">
           {article.tags.slice(0, 3).map((tag) => (
-            <span key={tag} className="tag-chip">{tag}</span>
+            <span key={tag} className="tag-chip">
+              {tag}
+            </span>
           ))}
         </div>
         <h3>{title}</h3>

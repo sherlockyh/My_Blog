@@ -17,7 +17,13 @@ interface ResourceEditModalProps {
   onSaved: () => void;
 }
 
-export default function ResourceEditModal({ open, mode, resource, onClose, onSaved }: ResourceEditModalProps) {
+export default function ResourceEditModal({
+  open,
+  mode,
+  resource,
+  onClose,
+  onSaved,
+}: ResourceEditModalProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [dirty, setDirty] = useState(false);
@@ -56,23 +62,31 @@ export default function ResourceEditModal({ open, mode, resource, onClose, onSav
   return (
     <Modal
       open={open}
-      title={isViewMode ? t('admin.viewResource') : resource ? t('admin.editResource') : t('admin.newResource')}
+      title={
+        isViewMode
+          ? t('admin.viewResource')
+          : resource
+            ? t('admin.editResource')
+            : t('admin.newResource')
+      }
       onOk={save}
       onCancel={close}
-      footer={isViewMode ? (
-        <Button icon={<CloseOutlined />} onClick={close}>
-          {t('common.close')}
-        </Button>
-      ) : (
-        <>
+      footer={
+        isViewMode ? (
           <Button icon={<CloseOutlined />} onClick={close}>
-            {t('common.cancel')}
+            {t('common.close')}
           </Button>
-          <Button type="primary" icon={<SaveOutlined />} onClick={save} className="btn-gradient">
-            {t('admin.save')}
-          </Button>
-        </>
-      )}
+        ) : (
+          <>
+            <Button icon={<CloseOutlined />} onClick={close}>
+              {t('common.cancel')}
+            </Button>
+            <Button type="primary" icon={<SaveOutlined />} onClick={save} className="btn-gradient">
+              {t('admin.save')}
+            </Button>
+          </>
+        )
+      }
       className="admin-edit-modal"
       destroyOnClose
     >

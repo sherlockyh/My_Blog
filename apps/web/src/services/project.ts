@@ -7,8 +7,10 @@ export const projectApi = {
 };
 
 export const adminProjectApi = {
-  adminProjects: (params?: PageQuery) => request.get<Paged<ProjectDTO>>('/admin/projects', { params }),
+  adminProjects: (params?: PageQuery) =>
+    request.get<Paged<ProjectDTO>>('/admin/projects', { params }),
   createProject: (body: Partial<ProjectDTO>) => request.post<ProjectDTO>('/admin/projects', body),
-  updateProject: (id: number, body: Partial<ProjectDTO>) => request.put<ProjectDTO>(`/admin/projects/${id}`, body),
+  updateProject: (id: number, body: Partial<ProjectDTO>) =>
+    request.put<ProjectDTO>(`/admin/projects/${id}`, body),
   deleteProject: (id: number) => request.delete<{ ok: boolean }>(`/admin/projects/${id}`),
 };

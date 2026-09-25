@@ -31,7 +31,7 @@ services:
       S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?set-MINIO_ROOT_PASSWORD}
       S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-http://localhost:9000}
     ports:
-      - "${APP_PORT:-8080}:80"
+      - '${APP_PORT:-8080}:80'
     healthcheck:
       test: ['CMD', 'wget', '-q', '--spider', 'http://127.0.0.1:7001/api/health/live']
       interval: 10s
@@ -48,11 +48,11 @@ services:
       POSTGRES_PASSWORD: blog123
       POSTGRES_DB: my_blog
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U blog -d my_blog"]
+      test: ['CMD-SHELL', 'pg_isready -U blog -d my_blog']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -61,11 +61,11 @@ services:
     image: redis:7
     container_name: blog-redis
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redisdata:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5

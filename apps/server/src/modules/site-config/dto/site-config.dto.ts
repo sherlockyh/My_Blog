@@ -1,4 +1,12 @@
-import { ArrayMaxSize, IsArray, IsNotEmpty, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class HeroDto {
@@ -19,7 +27,12 @@ export class FeatureDto {
 
 export class UpdateSiteConfigDto {
   @IsOptional() @ValidateNested() @Type(() => HeroDto) hero?: HeroDto;
-  @IsOptional() @IsArray() @ArrayMaxSize(6) @ValidateNested({ each: true }) @Type(() => FeatureDto) features?: FeatureDto[];
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(6)
+  @ValidateNested({ each: true })
+  @Type(() => FeatureDto)
+  features?: FeatureDto[];
   @IsOptional() @IsString() @MaxLength(80) weatherCity?: string;
   @IsOptional() @IsString() @MaxLength(300) announcement?: string;
 }
@@ -35,5 +48,10 @@ export class UpdateProfileDto {
   @IsOptional() @IsString() @MaxLength(500) bioZh?: string;
   @IsOptional() @IsString() @MaxLength(500) bioEn?: string;
   @IsOptional() @IsString() @MaxLength(80) location?: string;
-  @IsOptional() @IsArray() @ArrayMaxSize(8) @ValidateNested({ each: true }) @Type(() => SocialDto) socials?: SocialDto[];
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(8)
+  @ValidateNested({ each: true })
+  @Type(() => SocialDto)
+  socials?: SocialDto[];
 }

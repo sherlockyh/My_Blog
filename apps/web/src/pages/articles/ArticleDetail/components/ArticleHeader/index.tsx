@@ -1,5 +1,10 @@
 // 组件用途：展示文章详情页标题、面包屑、元信息和标签。
-import { CalendarOutlined, ClockCircleOutlined, EyeOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  CalendarOutlined,
+  ClockCircleOutlined,
+  EyeOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
@@ -28,7 +33,8 @@ export default function ArticleHeader({ article, title, primaryTag }: ArticleHea
           <UserOutlined /> yh
         </span>
         <span className="meta">
-          <CalendarOutlined /> {dayjs(article.publishedAt || article.createdAt).format('YYYY-MM-DD')}
+          <CalendarOutlined />{' '}
+          {dayjs(article.publishedAt || article.createdAt).format('YYYY-MM-DD')}
         </span>
         <span className="meta">
           <ClockCircleOutlined /> {t('articles.readingTime')}

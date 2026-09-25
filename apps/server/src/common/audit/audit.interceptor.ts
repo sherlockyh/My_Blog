@@ -24,7 +24,9 @@ export class AuditInterceptor implements NestInterceptor {
       tap((result) => {
         const source = { params: req.params, body: req.body, result };
         const detail = this.buildDetail(options, source);
-        const targetId = options.targetId ?? (options.targetIdPath ? this.readPath(source, options.targetIdPath) : undefined);
+        const targetId =
+          options.targetId ??
+          (options.targetIdPath ? this.readPath(source, options.targetIdPath) : undefined);
         void this.audit.log({
           user: req.user,
           action: options.action,
@@ -64,17 +66,26 @@ export class AuditInterceptor implements NestInterceptor {
 
   private toJsonValue(value: unknown): unknown {
     if (value === undefined) return undefined;
-    if (value === null || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return value;
+    if (
+      value === null ||
+      typeof value === 'string' ||
+      typeof value === 'number' ||
+      typeof value === 'boolean'
+    )
+      return value;
     if (Array.isArray(value)) {
       return value.map((item) => this.toJsonValue(item) ?? null);
     }
     if (value instanceof Date) return value.toISOString();
     if (typeof value === 'object') {
-      return Object.entries(value as Record<string, unknown>).reduce<Record<string, unknown>>((json, [key, item]) => {
-        const jsonValue = this.toJsonValue(item);
-        if (jsonValue !== undefined) json[key] = jsonValue;
-        return json;
-      }, {});
+      return Object.entries(value as Record<string, unknown>).reduce<Record<string, unknown>>(
+        (json, [key, item]) => {
+          const jsonValue = this.toJsonValue(item);
+          if (jsonValue !== undefined) json[key] = jsonValue;
+          return json;
+        },
+        {},
+      );
     }
     return String(value);
   }

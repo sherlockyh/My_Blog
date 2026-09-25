@@ -2,7 +2,15 @@
 import { useEffect, useState } from 'react';
 import { Button, Popconfirm, Space, Tag, message } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { DeleteOutlined, EditOutlined, EyeOutlined, FileTextOutlined, PlusOutlined, ReloadOutlined, StarOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  FileTextOutlined,
+  PlusOutlined,
+  ReloadOutlined,
+  StarOutlined,
+} from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { ArticleStatus, type ArticleDTO, type Paged } from '@my-blog/shared';
@@ -32,7 +40,12 @@ export default function AdminArticles() {
     setLoading(true);
     setLoadFailed(false);
     adminArticleApi
-      .adminArticles({ page: nextPage, pageSize: nextPageSize, keyword: query.keyword || undefined, status: query.status })
+      .adminArticles({
+        page: nextPage,
+        pageSize: nextPageSize,
+        keyword: query.keyword || undefined,
+        status: query.status,
+      })
       .then(setData)
       .catch(() => setLoadFailed(true))
       .finally(() => setLoading(false));
@@ -53,7 +66,8 @@ export default function AdminArticles() {
     setEditOpen(true);
   };
 
-  const publishedCount = data?.items.filter((item) => item.status === ArticleStatus.PUBLISHED).length ?? 0;
+  const publishedCount =
+    data?.items.filter((item) => item.status === ArticleStatus.PUBLISHED).length ?? 0;
   const draftCount = data?.items.filter((item) => item.status === ArticleStatus.DRAFT).length ?? 0;
   const featuredCount = data?.items.filter((item) => item.tags.length > 1).length ?? 0;
   const filters: FilterField[] = [
@@ -114,7 +128,14 @@ export default function AdminArticles() {
         </div>
       ),
     },
-    { title: t('admin.title'), dataIndex: 'titleZh', key: 'title', width: 220, ellipsis: true, render: (_, r) => <strong>{r.titleZh || r.titleEn}</strong> },
+    {
+      title: t('admin.title'),
+      dataIndex: 'titleZh',
+      key: 'title',
+      width: 220,
+      ellipsis: true,
+      render: (_, r) => <strong>{r.titleZh || r.titleEn}</strong>,
+    },
     {
       title: t('admin.status'),
       dataIndex: 'status',
@@ -135,7 +156,11 @@ export default function AdminArticles() {
       ellipsis: true,
       render: (tags: string[]) => (
         <Space size={[4, 4]} wrap>
-          {tags.map((tag) => <Tag key={tag} color="blue">{tag}</Tag>)}
+          {tags.map((tag) => (
+            <Tag key={tag} color="blue">
+              {tag}
+            </Tag>
+          ))}
         </Space>
       ),
     },
@@ -155,10 +180,18 @@ export default function AdminArticles() {
       className: 'admin-action-column',
       render: (_, r) => (
         <Space className="admin-table-actions">
-          <Button size="small" icon={<EyeOutlined />} onClick={() => openArticleModal(r.id, 'view')}>
+          <Button
+            size="small"
+            icon={<EyeOutlined />}
+            onClick={() => openArticleModal(r.id, 'view')}
+          >
             {t('common.view')}
           </Button>
-          <Button size="small" icon={<EditOutlined />} onClick={() => openArticleModal(r.id, 'edit')}>
+          <Button
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => openArticleModal(r.id, 'edit')}
+          >
             {t('admin.edit')}
           </Button>
           <Popconfirm title={t('admin.confirmDelete')} onConfirm={() => remove(r.id)}>
@@ -177,34 +210,61 @@ export default function AdminArticles() {
         className="admin-articles-page"
         title={t('admin.articleManage')}
         description={t('admin.articleManageDesc')}
-        actions={(
+        actions={
           <div className="admin-head-actions">
-            <Button icon={<ReloadOutlined />} onClick={() => load()}>{t('admin.refresh')}</Button>
-          <Button type="primary" icon={<PlusOutlined />} className="btn-gradient" onClick={() => openArticleModal()}>
-            {t('admin.newArticle')}
-          </Button>
+            <Button icon={<ReloadOutlined />} onClick={() => load()}>
+              {t('admin.refresh')}
+            </Button>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              className="btn-gradient"
+              onClick={() => openArticleModal()}
+            >
+              {t('admin.newArticle')}
+            </Button>
           </div>
-        )}
-        stats={(
+        }
+        stats={
           <div className="admin-stat-grid admin-article-stat-grid">
             <div className="admin-lite-stat">
-              <span><FileTextOutlined /></span>
-              <div><p>{t('admin.allArticles')}</p><strong>{data?.total ?? 0}</strong></div>
+              <span>
+                <FileTextOutlined />
+              </span>
+              <div>
+                <p>{t('admin.allArticles')}</p>
+                <strong>{data?.total ?? 0}</strong>
+              </div>
             </div>
             <div className="admin-lite-stat">
-              <span><FileTextOutlined /></span>
-              <div><p>{t('admin.published')}</p><strong>{publishedCount}</strong></div>
+              <span>
+                <FileTextOutlined />
+              </span>
+              <div>
+                <p>{t('admin.published')}</p>
+                <strong>{publishedCount}</strong>
+              </div>
             </div>
             <div className="admin-lite-stat">
-              <span><EditOutlined /></span>
-              <div><p>{t('admin.draft')}</p><strong>{draftCount}</strong></div>
+              <span>
+                <EditOutlined />
+              </span>
+              <div>
+                <p>{t('admin.draft')}</p>
+                <strong>{draftCount}</strong>
+              </div>
             </div>
             <div className="admin-lite-stat">
-              <span><StarOutlined /></span>
-              <div><p>{t('admin.featured')}</p><strong>{featuredCount}</strong></div>
+              <span>
+                <StarOutlined />
+              </span>
+              <div>
+                <p>{t('admin.featured')}</p>
+                <strong>{featuredCount}</strong>
+              </div>
             </div>
           </div>
-        )}
+        }
         filters={filters}
         filterValues={{ keyword, status }}
         searchText={t('admin.search')}

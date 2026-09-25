@@ -118,16 +118,32 @@ export default function SiteConfig() {
                   <Form.Item name={'fIcon' + i} label="Icon" style={{ marginBottom: 8 }}>
                     <Input placeholder="code / react / ts / node / idea / tool" />
                   </Form.Item>
-                  <Form.Item name={'fTitleZh' + i} label={t('admin.titleZh')} style={{ marginBottom: 8 }}>
+                  <Form.Item
+                    name={'fTitleZh' + i}
+                    label={t('admin.titleZh')}
+                    style={{ marginBottom: 8 }}
+                  >
                     <Input />
                   </Form.Item>
-                  <Form.Item name={'fTitleEn' + i} label={t('admin.titleEn')} style={{ marginBottom: 8 }}>
+                  <Form.Item
+                    name={'fTitleEn' + i}
+                    label={t('admin.titleEn')}
+                    style={{ marginBottom: 8 }}
+                  >
                     <Input />
                   </Form.Item>
-                  <Form.Item name={'fDescZh' + i} label={t('admin.descZh')} style={{ marginBottom: 8 }}>
+                  <Form.Item
+                    name={'fDescZh' + i}
+                    label={t('admin.descZh')}
+                    style={{ marginBottom: 8 }}
+                  >
                     <Input />
                   </Form.Item>
-                  <Form.Item name={'fDescEn' + i} label={t('admin.descEn')} style={{ marginBottom: 0 }}>
+                  <Form.Item
+                    name={'fDescEn' + i}
+                    label={t('admin.descEn')}
+                    style={{ marginBottom: 0 }}
+                  >
                     <Input />
                   </Form.Item>
                 </Card>
@@ -140,20 +156,28 @@ export default function SiteConfig() {
               <Form.Item name="weatherCity" label={t('admin.weatherCity')}>
                 <Input placeholder="Hangzhou" />
               </Form.Item>
-              <Form.Item name="announcement" label={t('admin.announcement')} style={{ marginBottom: 0 }}>
+              <Form.Item
+                name="announcement"
+                label={t('admin.announcement')}
+                style={{ marginBottom: 0 }}
+              >
                 <Input.TextArea rows={2} />
               </Form.Item>
             </Card>
             <Card className="admin-panel admin-config-note">
               <div className="admin-config-note-item">
-                <span className="admin-config-note-icon"><HomeOutlined /></span>
+                <span className="admin-config-note-icon">
+                  <HomeOutlined />
+                </span>
                 <div className="admin-config-note-text">
                   <strong>{t('admin.homePreview')}</strong>
                   <p>{t('admin.homePreviewDesc')}</p>
                 </div>
               </div>
               <div className="admin-config-note-item">
-                <span className="admin-config-note-icon"><SettingOutlined /></span>
+                <span className="admin-config-note-icon">
+                  <SettingOutlined />
+                </span>
                 <div className="admin-config-note-text">
                   <strong>{t('admin.configTip')}</strong>
                   <p>{t('admin.configTipDesc')}</p>
@@ -165,8 +189,16 @@ export default function SiteConfig() {
       </Form>
       <div className="admin-fixed-bottom-bar">
         <div className="admin-fixed-bottom-actions">
-          <Button icon={<ReloadOutlined />} onClick={() => confirmDirty(resetConfig)}>{t('admin.reset')}</Button>
-          <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={save} className="btn-gradient">
+          <Button icon={<ReloadOutlined />} onClick={() => confirmDirty(resetConfig)}>
+            {t('admin.reset')}
+          </Button>
+          <Button
+            type="primary"
+            icon={<SaveOutlined />}
+            loading={saving}
+            onClick={save}
+            className="btn-gradient"
+          >
             {t('admin.save')}
           </Button>
         </div>
