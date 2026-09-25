@@ -35,6 +35,9 @@ jobs:
       - name: Build shared package
         run: pnpm --filter @my-blog/shared build
 
+      - name: Lint
+        run: pnpm lint
+
       - name: Typecheck
         run: pnpm typecheck
 

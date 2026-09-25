@@ -1,0 +1,2 @@
+# 提交前对暂存文件跑 eslint --fix 与 prettier
+npx lint-staged
