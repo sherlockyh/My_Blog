@@ -14,7 +14,9 @@ http.interceptors.response.use(
   (res) => (res.data && typeof res.data === 'object' && 'code' in res.data ? res.data.data : res.data),
   (err) => {
     const status = err.response?.status;
-    if (status === 401 && window.location.pathname.startsWith('/admin')) {
+    // 登录接口自身的 401 是"账号密码错误"，交由登录页提示；只拦截后台页面的会话过期。
+    const isLoginRequest = String(err.config?.url || '').includes('/auth/login');
+    if (status === 401 && !isLoginRequest && window.location.pathname.startsWith('/admin')) {
       useAuthStore.getState().clear();
       window.location.href = '/admin/login';
     }

@@ -1,5 +1,5 @@
 const admin = {
-  login: 'Login', username: 'Username', password: 'Password', loginBtn: 'Sign in', loginOk: 'Logged in',
+  login: 'Login', username: 'Username', password: 'Password', loginBtn: 'Sign in', loginOk: 'Logged in', loginFail: 'Login failed. Check your username and password.',
   adminConsole: 'Admin Console', secureLogin: 'Secure Login', loginTitle: 'Manage your content universe', loginSubtitle: 'Maintain posts, projects, resources, and profile data with a clean publishing workflow.', loginHint: 'Use your admin account to continue', contentGuard: 'Content guard', dataSync: 'Data sync', visualManage: 'Visual ops',
   dashboard: 'Dashboard', articles: 'Articles', projects: 'Projects', resources: 'Resources', messages: 'Messages', siteConfig: 'Site Config', profile: 'Profile',
   backHome: 'Back to site', logout: 'Logout',

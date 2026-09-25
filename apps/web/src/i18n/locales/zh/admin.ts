@@ -1,5 +1,5 @@
 const admin = {
-  login: '登录', username: '用户名', password: '密码', loginBtn: '登 录', loginOk: '登录成功',
+  login: '登录', username: '用户名', password: '密码', loginBtn: '登 录', loginOk: '登录成功', loginFail: '登录失败，请检查用户名和密码',
   adminConsole: '后台管理中心', secureLogin: '安全登录', loginTitle: '管理你的内容宇宙', loginSubtitle: '维护文章、项目、资源与站点资料，让博客保持清爽、有序和稳定更新。', loginHint: '使用管理员账号进入后台', contentGuard: '内容巡检', dataSync: '数据同步', visualManage: '可视管理',
   dashboard: '仪表盘', articles: '文章管理', projects: '项目管理', resources: '资源管理', messages: '留言管理', siteConfig: '首页配置', profile: '个人信息',
   backHome: '回到首页', logout: '退出登录',
