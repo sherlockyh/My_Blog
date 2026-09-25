@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import type { MessageDTO } from '@my-blog/shared';
 import { messageApi } from '@/services/message';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function Guestbook() {
   const { t } = useTranslation();

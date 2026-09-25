@@ -10,7 +10,7 @@ import { useBeforeUnloadWhenDirty, useDirtyConfirm } from '@/hooks/useDirtyConfi
 import AccountOverviewCard from './components/AccountOverviewCard';
 import ProfileFooterActions from './components/ProfileFooterActions';
 import ProfileFormCard, { type ProfileFormValues } from './components/ProfileFormCard';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function AdminProfile() {
   const { t } = useTranslation();

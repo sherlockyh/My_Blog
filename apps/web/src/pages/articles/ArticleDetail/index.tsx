@@ -13,7 +13,7 @@ import ArticleLeftRail from './components/ArticleLeftRail';
 import ArticleRightRail from './components/ArticleRightRail';
 import BackTopButton from './components/BackTopButton';
 import { getToc } from './utils/toc';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function ArticleDetail() {
   const { slug = '' } = useParams();

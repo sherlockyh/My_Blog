@@ -5,7 +5,7 @@ import { CodeOutlined, MenuOutlined } from '@ant-design/icons';
 import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ThemeToggle from '@/components/ThemeToggle';
-import './styles/index.module.less';
+import './styles/index.less';
 
 const NAV_KEYS = [
   { key: '/', i18n: 'nav.home' },

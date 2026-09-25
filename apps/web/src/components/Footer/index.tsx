@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { GithubOutlined, GlobalOutlined } from '@ant-design/icons';
 import { useSiteStore } from '@/store/site';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function Footer() {
   const { t } = useTranslation();

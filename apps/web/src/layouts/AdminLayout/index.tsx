@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/auth';
 import { useAdminDirtyStore } from '@/store/adminDirty';
 import AdminThemeProvider from '@/components/admin/AdminThemeProvider';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function AdminLayout() {
   const { t } = useTranslation();

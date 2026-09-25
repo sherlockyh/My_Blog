@@ -13,7 +13,7 @@ import DashboardCommentActivity from './components/DashboardCommentActivity';
 import DashboardRecentArticles from './components/DashboardRecentArticles';
 import DashboardReminderPanel from './components/DashboardReminderPanel';
 import DashboardStats from './components/DashboardStats';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function Dashboard() {
   const { t } = useTranslation();

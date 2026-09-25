@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import type { ResourceDTO } from '@my-blog/shared';
 import { resourceApi } from '@/services/resource';
 import { pick } from '@/utils/content';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function Resources() {
   const { t } = useTranslation();

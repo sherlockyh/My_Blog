@@ -9,7 +9,7 @@ import { ArticleStatus, type ArticleDTO, type Paged } from '@my-blog/shared';
 import { adminArticleApi } from '@/services/article';
 import ListPage, { type FilterField, type FilterValue } from '@/components/admin/ListPage';
 import ArticleEditModal, { type ArticleModalMode } from './components/ArticleEditModal';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function AdminArticles() {
   const { t } = useTranslation();

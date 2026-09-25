@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import type { ArticleDTO } from '@my-blog/shared';
 import { articleApi } from '@/services/article';
 import { pick } from '@/utils/content';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function Categories() {
   const { t } = useTranslation();

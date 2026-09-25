@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSiteStore } from '@/store/site';
 import { pick } from '@/utils/content';
-import './styles/index.module.less';
+import './styles/index.less';
 
 function getSocialIcon(label: string, url: string) {
   const text = `${label} ${url}`.toLowerCase();

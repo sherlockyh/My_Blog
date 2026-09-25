@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import type { ArticleDTO } from '@my-blog/shared';
 import ArticleCoverFallback from '@/components/blog/ArticleCoverFallback';
 import { pick } from '@/utils/content';
-import './styles/index.module.less';
+import './styles/index.less';
 
 interface ArticleCardProps {
   article: ArticleDTO;

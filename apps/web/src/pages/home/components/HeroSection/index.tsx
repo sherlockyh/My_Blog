@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useSiteStore } from '@/store/site';
 import { pick } from '@/utils/content';
 import WeatherChip from '@/components/WeatherChip';
-import './styles/index.module.less';
+import './styles/index.less';
 
 const DEFAULT_TITLE = '用代码创造有趣的数字体验';
 const DEFAULT_DESC = '专注前端开发与产品设计，分享技术文章、开发经验和有趣的数字产品。';

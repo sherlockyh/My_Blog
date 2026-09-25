@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Empty, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { articleApi } from '@/services/article';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function Tags() {
   const { t } = useTranslation();

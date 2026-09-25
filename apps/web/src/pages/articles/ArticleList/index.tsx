@@ -8,7 +8,7 @@ import type { ArticleDTO, Paged } from '@my-blog/shared';
 import { articleApi } from '@/services/article';
 import ArticleCard from '@/components/blog/ArticleCard';
 import BlogSidebar from '@/components/blog/BlogSidebar';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function ArticleList() {
   const { t } = useTranslation();

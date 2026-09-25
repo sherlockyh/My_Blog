@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import type { ProjectDTO } from '@my-blog/shared';
 import { projectApi } from '@/services/project';
 import ProjectCard from '@/components/ProjectCard';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function FeaturedProjects() {
   const { t } = useTranslation();

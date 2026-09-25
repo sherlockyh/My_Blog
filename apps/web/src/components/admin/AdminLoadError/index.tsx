@@ -2,7 +2,7 @@
 import { Alert, Button } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import './styles/index.module.less';
+import './styles/index.less';
 
 interface AdminLoadErrorProps {
   onRetry: () => void;

@@ -13,7 +13,7 @@ import ArticleContentTabs from './components/ArticleContentTabs';
 import CoverUploader from './components/CoverUploader';
 import MarkdownPreviewModal from './components/MarkdownPreviewModal';
 import PublishSettings from './components/PublishSettings';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export type ArticleModalMode = 'create' | 'edit' | 'view';
 

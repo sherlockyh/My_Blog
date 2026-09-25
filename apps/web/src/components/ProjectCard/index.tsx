@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import type { ProjectDTO } from '@my-blog/shared';
 import { pick } from '@/utils/content';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function ProjectCard({ project }: { project: ProjectDTO }) {
   return (

@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 import { useSiteStore } from '@/store/site';
 import { pick } from '@/utils/content';
-import './styles/index.module.less';
+import './styles/index.less';
 
 const ICONS: Record<string, ReactNode> = {
   thunder: <ThunderboltOutlined />,

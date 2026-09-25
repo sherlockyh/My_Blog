@@ -1,5 +1,5 @@
 // 组件用途：在文章无封面时展示统一的占位封面。
-import './styles/index.module.less';
+import './styles/index.less';
 
 interface ArticleCoverFallbackProps {
   label: string;

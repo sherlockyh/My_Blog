@@ -5,7 +5,7 @@ import { HomeOutlined, ReloadOutlined, SaveOutlined, SettingOutlined } from '@an
 import { useTranslation } from 'react-i18next';
 import { siteApi } from '@/services/site';
 import { useBeforeUnloadWhenDirty, useDirtyConfirm } from '@/hooks/useDirtyConfirm';
-import './styles/index.module.less';
+import './styles/index.less';
 
 const FEATURE_SLOTS = [0, 1, 2, 3, 4, 5];
 type SiteConfigFormValues = Record<string, string | undefined>;

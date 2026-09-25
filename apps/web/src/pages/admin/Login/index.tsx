@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { authApi } from '@/services/auth';
 import { useAuthStore } from '@/store/auth';
 import AdminThemeProvider from '@/components/admin/AdminThemeProvider';
-import './styles/index.module.less';
+import './styles/index.less';
 
 export default function AdminLogin() {
   const { t } = useTranslation();
@@ -16,10 +16,16 @@ export default function AdminLogin() {
 
   const submit = async () => {
     const values = await form.validateFields();
-    const res = await authApi.login(values);
-    setToken(res.token);
-    message.success(t('admin.loginOk'));
-    navigate('/admin');
+    try {
+      const res = await authApi.login(values);
+      setToken(res.token);
+      message.success(t('admin.loginOk'));
+      navigate('/admin');
+    } catch (err) {
+      // 密码错误/限流等：展示后端 message，停留登录页。
+      const msg = (err as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
+      message.error(typeof msg === 'string' && msg ? msg : t('admin.loginFail'));
+    }
   };
 
   return (

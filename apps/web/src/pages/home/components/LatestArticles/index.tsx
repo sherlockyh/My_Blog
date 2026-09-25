@@ -20,7 +20,7 @@ import ArticleCoverFallback from '@/components/blog/ArticleCoverFallback';
 import { articleApi } from '@/services/article';
 import { useSiteStore } from '@/store/site';
 import { pick } from '@/utils/content';
-import './styles/index.module.less';
+import './styles/index.less';
 
 function getSocialIcon(label: string, url: string) {
   const text = `${label} ${url}`.toLowerCase();
