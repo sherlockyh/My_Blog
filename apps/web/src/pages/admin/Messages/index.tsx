@@ -1,41 +1,28 @@
 // 页面用途：管理后台留言列表、查看和删除操作。
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Popconfirm, Space, message } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
-import type { MessageDTO, Paged } from '@my-blog/shared';
+import type { MessageDTO } from '@my-blog/shared';
 import { adminMessageApi } from '@/services/message';
 import ListPage from '@/components/admin/ListPage';
+import { usePagedList } from '@/hooks/usePagedList';
 import MessageDetailModal from './components/MessageDetailModal';
 
 export default function AdminMessages() {
   const { t } = useTranslation();
-  const [data, setData] = useState<Paged<MessageDTO> | null>(null);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [loading, setLoading] = useState(false);
-  const [loadFailed, setLoadFailed] = useState(false);
   const [viewing, setViewing] = useState<MessageDTO | null>(null);
 
-  const load = (nextPage = page, nextPageSize = pageSize) => {
-    setLoading(true);
-    setLoadFailed(false);
-    adminMessageApi
-      .adminMessages({ page: nextPage, pageSize: nextPageSize })
-      .then(setData)
-      .catch(() => setLoadFailed(true))
-      .finally(() => setLoading(false));
-  };
-  useEffect(() => {
-    load();
-  }, [page, pageSize]);
+  const { data, page, pageSize, loading, loadFailed, setPage, setPageSize, reload } = usePagedList(
+    (p, ps) => adminMessageApi.adminMessages({ page: p, pageSize: ps }),
+  );
 
   const remove = async (id: number) => {
     await adminMessageApi.deleteMessage(id);
     message.success(t('admin.deleted'));
-    load();
+    reload();
   };
   const pagination: TablePaginationConfig = {
     current: page,
@@ -85,7 +72,7 @@ export default function AdminMessages() {
         title={t('admin.messageManage')}
         description={t('admin.messageManageDesc')}
         loadFailed={loadFailed}
-        onRetry={load}
+        onRetry={() => void reload()}
         rowKey="id"
         loading={loading}
         dataSource={data?.items || []}

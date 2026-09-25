@@ -1,37 +1,24 @@
 // 页面用途：管理后台项目列表和项目编辑弹窗入口。
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Popconfirm, Space, Tag, message } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import type { Paged, ProjectDTO } from '@my-blog/shared';
+import type { ProjectDTO } from '@my-blog/shared';
 import { adminProjectApi } from '@/services/project';
 import ListPage from '@/components/admin/ListPage';
+import { usePagedList } from '@/hooks/usePagedList';
 import ProjectEditModal, { type ProjectModalMode } from './components/ProjectEditModal';
 
 export default function AdminProjects() {
   const { t } = useTranslation();
-  const [data, setData] = useState<Paged<ProjectDTO> | null>(null);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [loading, setLoading] = useState(false);
-  const [loadFailed, setLoadFailed] = useState(false);
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState<ProjectModalMode>('create');
   const [editing, setEditing] = useState<ProjectDTO | null>(null);
 
-  const load = (nextPage = page, nextPageSize = pageSize) => {
-    setLoading(true);
-    setLoadFailed(false);
-    adminProjectApi
-      .adminProjects({ page: nextPage, pageSize: nextPageSize })
-      .then(setData)
-      .catch(() => setLoadFailed(true))
-      .finally(() => setLoading(false));
-  };
-  useEffect(() => {
-    load();
-  }, [page, pageSize]);
+  const { data, page, pageSize, loading, loadFailed, setPage, setPageSize, reload } = usePagedList(
+    (p, ps) => adminProjectApi.adminProjects({ page: p, pageSize: ps }),
+  );
 
   const openModal = (row?: ProjectDTO, nextMode: ProjectModalMode = row ? 'edit' : 'create') => {
     setModalMode(nextMode);
@@ -42,7 +29,7 @@ export default function AdminProjects() {
   const remove = async (id: number) => {
     await adminProjectApi.deleteProject(id);
     message.success(t('admin.deleted'));
-    load();
+    reload();
   };
   const pagination: TablePaginationConfig = {
     current: page,
@@ -56,7 +43,12 @@ export default function AdminProjects() {
     },
   };
   const columns: ColumnsType<ProjectDTO> = [
-    { title: t('admin.title'), key: 'title', ellipsis: true, render: (_, r) => r.titleZh || r.titleEn },
+    {
+      title: t('admin.title'),
+      key: 'title',
+      ellipsis: true,
+      render: (_, r) => r.titleZh || r.titleEn,
+    },
     {
       title: t('admin.featuredProject'),
       dataIndex: 'featured',
@@ -94,13 +86,18 @@ export default function AdminProjects() {
       <ListPage<ProjectDTO>
         title={t('admin.projectManage')}
         description={t('admin.projectManageDesc')}
-        actions={(
-        <Button type="primary" icon={<PlusOutlined />} className="btn-gradient" onClick={() => openModal()}>
-          {t('admin.newProject')}
-        </Button>
-        )}
+        actions={
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            className="btn-gradient"
+            onClick={() => openModal()}
+          >
+            {t('admin.newProject')}
+          </Button>
+        }
         loadFailed={loadFailed}
-        onRetry={load}
+        onRetry={() => void reload()}
         rowKey="id"
         loading={loading}
         dataSource={data?.items || []}
@@ -113,7 +110,7 @@ export default function AdminProjects() {
         mode={modalMode}
         project={editing}
         onClose={() => setOpen(false)}
-        onSaved={load}
+        onSaved={() => void reload()}
       />
     </>
   );

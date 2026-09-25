@@ -1,37 +1,24 @@
 // 页面用途：管理后台资源列表和资源编辑弹窗入口。
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Popconfirm, Space, message } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import type { Paged, ResourceDTO } from '@my-blog/shared';
+import type { ResourceDTO } from '@my-blog/shared';
 import { adminResourceApi } from '@/services/resource';
 import ListPage from '@/components/admin/ListPage';
+import { usePagedList } from '@/hooks/usePagedList';
 import ResourceEditModal, { type ResourceModalMode } from './components/ResourceEditModal';
 
 export default function AdminResources() {
   const { t } = useTranslation();
-  const [data, setData] = useState<Paged<ResourceDTO> | null>(null);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [loading, setLoading] = useState(false);
-  const [loadFailed, setLoadFailed] = useState(false);
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState<ResourceModalMode>('create');
   const [editing, setEditing] = useState<ResourceDTO | null>(null);
 
-  const load = (nextPage = page, nextPageSize = pageSize) => {
-    setLoading(true);
-    setLoadFailed(false);
-    adminResourceApi
-      .adminResources({ page: nextPage, pageSize: nextPageSize })
-      .then(setData)
-      .catch(() => setLoadFailed(true))
-      .finally(() => setLoading(false));
-  };
-  useEffect(() => {
-    load();
-  }, [page, pageSize]);
+  const { data, page, pageSize, loading, loadFailed, setPage, setPageSize, reload } = usePagedList(
+    (p, ps) => adminResourceApi.adminResources({ page: p, pageSize: ps }),
+  );
 
   const openModal = (row?: ResourceDTO, nextMode: ResourceModalMode = row ? 'edit' : 'create') => {
     setModalMode(nextMode);
@@ -42,7 +29,7 @@ export default function AdminResources() {
   const remove = async (id: number) => {
     await adminResourceApi.deleteResource(id);
     message.success(t('admin.deleted'));
-    load();
+    reload();
   };
   const pagination: TablePaginationConfig = {
     current: page,
@@ -56,7 +43,12 @@ export default function AdminResources() {
     },
   };
   const columns: ColumnsType<ResourceDTO> = [
-    { title: t('admin.title'), key: 'title', ellipsis: true, render: (_, r) => r.titleZh || r.titleEn },
+    {
+      title: t('admin.title'),
+      key: 'title',
+      ellipsis: true,
+      render: (_, r) => r.titleZh || r.titleEn,
+    },
     { title: t('admin.category'), dataIndex: 'category', key: 'category', width: 120 },
     { title: t('admin.link'), dataIndex: 'link', key: 'link', ellipsis: true },
     {
@@ -88,13 +80,18 @@ export default function AdminResources() {
       <ListPage<ResourceDTO>
         title={t('admin.resourceManage')}
         description={t('admin.resourceManageDesc')}
-        actions={(
-        <Button type="primary" icon={<PlusOutlined />} className="btn-gradient" onClick={() => openModal()}>
-          {t('admin.newResource')}
-        </Button>
-        )}
+        actions={
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            className="btn-gradient"
+            onClick={() => openModal()}
+          >
+            {t('admin.newResource')}
+          </Button>
+        }
         loadFailed={loadFailed}
-        onRetry={load}
+        onRetry={() => void reload()}
         rowKey="id"
         loading={loading}
         dataSource={data?.items || []}
@@ -107,7 +104,7 @@ export default function AdminResources() {
         mode={modalMode}
         resource={editing}
         onClose={() => setOpen(false)}
-        onSaved={load}
+        onSaved={() => void reload()}
       />
     </>
   );

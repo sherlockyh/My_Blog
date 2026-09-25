@@ -1,25 +1,19 @@
 // 页面用途：展示公开项目列表和关键词筛选。
-import { useEffect, useState } from 'react';
-import { Empty, Input, Tag } from 'antd';
+import { useState } from 'react';
+import { Button, Empty, Input, Tag } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import type { ProjectDTO } from '@my-blog/shared';
 import { projectApi } from '@/services/project';
+import { useRequest } from '@/hooks/useRequest';
 import ProjectCard from '@/components/blog/ProjectCard';
 import './styles/index.less';
 
 export default function Projects() {
   const { t } = useTranslation();
-  const [projects, setProjects] = useState<ProjectDTO[]>([]);
   const [keyword, setKeyword] = useState('');
   const [tag, setTag] = useState('');
-
-  useEffect(() => {
-    projectApi
-      .projects()
-      .then(setProjects)
-      .catch(() => {});
-  }, []);
+  const { data, error, refresh } = useRequest(() => projectApi.projects());
+  const projects = data ?? [];
 
   const tags = [...new Set(projects.flatMap((project) => project.tags))];
   const filtered = projects.filter((project) => {
@@ -72,7 +66,13 @@ export default function Projects() {
           <ProjectCard key={p.id} project={p} />
         ))}
       </div>
-      {!filtered.length && <Empty description={t('projects.empty')} />}
+      {error ? (
+        <Empty description={t('common.loadFailed')}>
+          <Button onClick={() => void refresh()}>{t('common.retry')}</Button>
+        </Empty>
+      ) : (
+        !filtered.length && <Empty description={t('projects.empty')} />
+      )}
     </div>
   );
 }

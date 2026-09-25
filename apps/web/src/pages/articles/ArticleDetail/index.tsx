@@ -3,10 +3,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button, Result, Spin } from 'antd';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import type { ArticleDTO } from '@my-blog/shared';
 import { articleApi } from '@/services/article';
 import { pick } from '@/utils/content';
 import { useThemeStore } from '@/store/theme';
+import { useRequest } from '@/hooks/useRequest';
 import ArticleBody from './components/ArticleBody';
 import ArticleHeader from './components/ArticleHeader';
 import ArticleLeftRail from './components/ArticleLeftRail';
@@ -20,13 +20,22 @@ export default function ArticleDetail() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const theme = useThemeStore((s) => s.theme);
-  const [article, setArticle] = useState<ArticleDTO | null>(null);
-  const [articles, setArticles] = useState<ArticleDTO[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
   const [leftRailCollapsed, setLeftRailCollapsed] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHeadingId, setActiveHeadingId] = useState('');
+
+  // 详情加载失败按 404 语义处理（slug 不存在或已下线）
+  const {
+    data: detail,
+    loading,
+    error: detailError,
+  } = useRequest(() => articleApi.article(slug), { refreshDeps: [slug] });
+  const article = detail ?? null;
+  const notFound = !!detailError;
+
+  // 全站精简清单（无正文）：相关文章与侧栏分类树的派生数据源
+  const { data: articleList } = useRequest(() => articleApi.allPublished());
+  const articles = articleList?.items ?? [];
   const content = article ? pick(article.contentZh, article.contentEn) : '';
   const title = article ? pick(article.titleZh, article.titleEn) : '';
   const summary = article ? pick(article.summaryZh, article.summaryEn) : '';
@@ -47,33 +56,6 @@ export default function ArticleDetail() {
       })),
     };
   });
-
-  useEffect(() => {
-    setLoading(true);
-    setNotFound(false);
-    articleApi
-      .article(slug)
-      .then(setArticle)
-      .catch(() => {
-        setNotFound(true);
-      })
-      .finally(() => setLoading(false));
-  }, [slug]);
-
-  useEffect(() => {
-    let ignore = false;
-    articleApi
-      .articles({ pageSize: 50 })
-      .then((res) => {
-        if (!ignore) setArticles(res.items);
-      })
-      .catch(() => {
-        if (!ignore) setArticles([]);
-      });
-    return () => {
-      ignore = true;
-    };
-  }, []);
 
   useEffect(() => {
     const updateProgress = () => {

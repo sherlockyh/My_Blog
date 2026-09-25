@@ -1,11 +1,11 @@
 // 页面用途：展示公开文章列表、标签筛选和分页。
 import { useEffect, useState, type KeyboardEvent } from 'react';
-import { Empty, Input, Pagination, Spin, Tag } from 'antd';
+import { Button, Empty, Input, Pagination, Spin, Tag } from 'antd';
 import { FileTextOutlined, SearchOutlined, TagsOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import type { ArticleDTO, Paged } from '@my-blog/shared';
 import { articleApi } from '@/services/article';
+import { useRequest } from '@/hooks/useRequest';
 import ArticleCard from '@/components/blog/ArticleCard';
 import BlogSidebar from '@/components/blog/BlogSidebar';
 import './styles/index.less';
@@ -13,13 +13,12 @@ import './styles/index.less';
 export default function ArticleList() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [data, setData] = useState<Paged<ArticleDTO> | null>(null);
-  const [tags, setTags] = useState<string[]>([]);
+  const { data: tagsData } = useRequest(() => articleApi.articleTags());
+  const tags = tagsData ?? [];
   const [tag, setTag] = useState<string>(searchParams.get('tag') || '');
   const [searchText, setSearchText] = useState(searchParams.get('keyword') || '');
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
 
   const selectTag = (nextTag: string) => {
     setTag(nextTag);
@@ -31,10 +30,6 @@ export default function ArticleList() {
     event.preventDefault();
     selectTag(nextTag);
   };
-
-  useEffect(() => {
-    articleApi.articleTags().then(setTags).catch(() => setTags([]));
-  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -52,24 +47,22 @@ export default function ArticleList() {
     return () => window.clearTimeout(timer);
   }, [searchText, tag]);
 
-  useEffect(() => {
-    let ignore = false;
-    setLoading(true);
-    articleApi
-      .articles({ page, pageSize: 8, tag: tag || undefined, keyword: keyword || undefined })
-      .then((res) => {
-        if (!ignore) setData(res);
-      })
-      .catch(() => {
-        if (!ignore) setData({ items: [], total: 0, page, pageSize: 8 });
-      })
-      .finally(() => {
-        if (!ignore) setLoading(false);
-      });
-    return () => {
-      ignore = true;
-    };
-  }, [page, tag, keyword]);
+  const {
+    data: pageData,
+    loading,
+    error,
+    refresh,
+  } = useRequest(
+    () =>
+      articleApi.articles({
+        page,
+        pageSize: 8,
+        tag: tag || undefined,
+        keyword: keyword || undefined,
+      }),
+    { refreshDeps: [page, tag, keyword] },
+  );
+  const data = pageData ?? null;
 
   return (
     <div className="container section blog-module">
@@ -81,7 +74,9 @@ export default function ArticleList() {
           <h1>{t('articles.title')}</h1>
           <p>{t('articles.subtitle')}</p>
         </div>
-        <span className="page-count">{data?.total || 0} {t('articles.total')}</span>
+        <span className="page-count">
+          {data?.total || 0} {t('articles.total')}
+        </span>
       </div>
 
       <div className="blog-layout">
@@ -134,7 +129,13 @@ export default function ArticleList() {
                 <ArticleCard key={a.id} article={a} variant="row" />
               ))}
             </div>
-            {!loading && !data?.items.length && <Empty description={t('articles.empty')} />}
+            {error ? (
+              <Empty description={t('common.loadFailed')}>
+                <Button onClick={() => void refresh()}>{t('common.retry')}</Button>
+              </Empty>
+            ) : (
+              !loading && !data?.items.length && <Empty description={t('articles.empty')} />
+            )}
           </Spin>
 
           {(data?.total || 0) > 8 && (

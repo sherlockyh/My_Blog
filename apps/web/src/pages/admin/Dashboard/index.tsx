@@ -1,11 +1,10 @@
 // 页面用途：展示后台运营概览并汇总文章、资源和留言数据。
-import { useEffect, useState } from 'react';
 import { CalendarOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
-import type { ArticleDTO, MessageDTO, Paged, ResourceDTO, StatsDTO } from '@my-blog/shared';
 import { adminArticleApi } from '@/services/article';
 import { dashboardApi } from '@/services/dashboard';
+import { useRequest } from '@/hooks/useRequest';
 import { adminMessageApi } from '@/services/message';
 import { adminResourceApi } from '@/services/resource';
 import DashboardCharts, { type DistributionItem } from './components/DashboardCharts';
@@ -17,17 +16,20 @@ import './styles/index.less';
 
 export default function Dashboard() {
   const { t } = useTranslation();
-  const [stats, setStats] = useState<StatsDTO | null>(null);
-  const [articles, setArticles] = useState<Paged<ArticleDTO> | null>(null);
-  const [resources, setResources] = useState<Paged<ResourceDTO> | null>(null);
-  const [messages, setMessages] = useState<Paged<MessageDTO> | null>(null);
-
-  useEffect(() => {
-    dashboardApi.stats().then(setStats).catch(() => {});
-    adminArticleApi.adminArticles({ page: 1, pageSize: 4 }).then(setArticles).catch(() => {});
-    adminResourceApi.adminResources({ page: 1, pageSize: 4 }).then(setResources).catch(() => {});
-    adminMessageApi.adminMessages({ page: 1, pageSize: 4 }).then(setMessages).catch(() => {});
-  }, []);
+  const { data: statsData } = useRequest(() => dashboardApi.stats());
+  const stats = statsData ?? null;
+  const { data: articlesData } = useRequest(() =>
+    adminArticleApi.adminArticles({ page: 1, pageSize: 4 }),
+  );
+  const articles = articlesData ?? null;
+  const { data: resourcesData } = useRequest(() =>
+    adminResourceApi.adminResources({ page: 1, pageSize: 4 }),
+  );
+  const resources = resourcesData ?? null;
+  const { data: messagesData } = useRequest(() =>
+    adminMessageApi.adminMessages({ page: 1, pageSize: 4 }),
+  );
+  const messages = messagesData ?? null;
 
   const totalArticles = stats?.articleCount ?? articles?.total ?? 0;
   const publishedCount = stats?.publishedCount ?? 0;
@@ -66,12 +68,7 @@ export default function Dashboard() {
       />
 
       <div className="admin-dashboard-grid">
-        <DashboardCharts
-          distribution={distribution}
-          contentTotal={contentTotal}
-          totalViews={stats?.totalViews ?? 0}
-          totalArticles={totalArticles}
-        />
+        <DashboardCharts distribution={distribution} contentTotal={contentTotal} />
         <DashboardReminderPanel
           messageCount={messageCount}
           draftCount={draftCount}

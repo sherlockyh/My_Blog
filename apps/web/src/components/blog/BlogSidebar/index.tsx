@@ -1,11 +1,15 @@
 // 组件用途：展示博客侧边栏的作者、最新文章和标签信息。
-import { useEffect, useState } from 'react';
-import { ClockCircleOutlined, EnvironmentOutlined, TagsOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  ClockCircleOutlined,
+  EnvironmentOutlined,
+  TagsOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import type { ArticleDTO } from '@my-blog/shared';
 import { articleApi } from '@/services/article';
+import { useRequest } from '@/hooks/useRequest';
 import { useSiteStore } from '@/store/site';
 import { pick } from '@/utils/content';
 import './styles/index.less';
@@ -18,34 +22,20 @@ interface BlogSidebarProps {
 export default function BlogSidebar({ currentSlug, tags: initialTags }: BlogSidebarProps) {
   const { t } = useTranslation();
   const profile = useSiteStore((s) => s.site?.profile);
-  const [latest, setLatest] = useState<ArticleDTO[]>([]);
-  const [tags, setTags] = useState<string[]>(initialTags || []);
-
-  useEffect(() => {
-    let ignore = false;
-    // 侧栏只取轻量列表字段，既补齐模块信息，也避免把文章正文拉进公共页面侧栏。
-    articleApi
-      .articles({ pageSize: 5 })
-      .then((res) => {
-        if (!ignore) setLatest(res.items.filter((item) => item.slug !== currentSlug).slice(0, 4));
-      })
-      .catch(() => {
-        if (!ignore) setLatest([]);
-      });
-    if (!initialTags?.length) {
-      articleApi
-        .articleTags()
-        .then((rows) => {
-          if (!ignore) setTags(rows.slice(0, 12));
-        })
-        .catch(() => {
-          if (!ignore) setTags([]);
-        });
-    }
-    return () => {
-      ignore = true;
-    };
-  }, [currentSlug, initialTags?.length]);
+  // 侧栏只取轻量列表字段，既补齐模块信息，也避免把文章正文拉进公共页面侧栏。
+  const { data: latestData } = useRequest(
+    async () =>
+      (await articleApi.articles({ pageSize: 5 })).items
+        .filter((item) => item.slug !== currentSlug)
+        .slice(0, 4),
+    { refreshDeps: [currentSlug] },
+  );
+  const latest = latestData ?? [];
+  // 外部已传入标签时跳过请求
+  const { data: tagsData } = useRequest(async () => (await articleApi.articleTags()).slice(0, 12), {
+    manual: !!initialTags?.length,
+  });
+  const tags = initialTags?.length ? initialTags : (tagsData ?? []);
 
   return (
     <aside className="blog-sidebar">

@@ -1,23 +1,16 @@
 // 组件用途：展示首页精选项目区块。
-import { useEffect, useState } from 'react';
 import { ArrowRightOutlined, RocketOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import type { ProjectDTO } from '@my-blog/shared';
 import { projectApi } from '@/services/project';
+import { useRequest } from '@/hooks/useRequest';
 import ProjectCard from '@/components/blog/ProjectCard';
 import './styles/index.less';
 
 export default function FeaturedProjects() {
   const { t } = useTranslation();
-  const [projects, setProjects] = useState<ProjectDTO[]>([]);
-
-  useEffect(() => {
-    projectApi
-      .projects()
-      .then(setProjects)
-      .catch(() => setProjects([]));
-  }, []);
+  const { data } = useRequest(() => projectApi.projects());
+  const projects = data ?? [];
 
   const featured = [...projects]
     .sort((a, b) => a.sort - b.sort)

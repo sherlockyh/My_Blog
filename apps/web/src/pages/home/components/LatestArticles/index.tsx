@@ -1,5 +1,4 @@
 // 组件用途：展示首页最新文章和个人简介摘要。
-import { useEffect, useState } from 'react';
 import {
   CalendarOutlined,
   CodeOutlined,
@@ -15,9 +14,9 @@ import {
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
-import type { ArticleDTO } from '@my-blog/shared';
 import ArticleCoverFallback from '@/components/blog/ArticleCoverFallback';
 import { articleApi } from '@/services/article';
+import { useRequest } from '@/hooks/useRequest';
 import { useSiteStore } from '@/store/site';
 import { pick } from '@/utils/content';
 import './styles/index.less';
@@ -31,13 +30,14 @@ function getSocialIcon(label: string, url: string) {
 
 export default function LatestArticles() {
   const { t } = useTranslation();
-  const [articles, setArticles] = useState<ArticleDTO[]>([]);
+  const { data: latestData } = useRequest(() => articleApi.articles({ pageSize: 3 }));
+  const articles = latestData?.items ?? [];
   const profile = useSiteStore((s) => s.site?.profile);
-  const focusTags = [t('home.aboutFocusFrontend'), t('home.aboutFocusDesign'), t('home.aboutFocusProduct')];
-
-  useEffect(() => {
-    articleApi.articles({ pageSize: 3 }).then((res) => setArticles(res.items)).catch(() => setArticles([]));
-  }, []);
+  const focusTags = [
+    t('home.aboutFocusFrontend'),
+    t('home.aboutFocusDesign'),
+    t('home.aboutFocusProduct'),
+  ];
 
   if (!articles.length) return null;
 
@@ -92,7 +92,9 @@ export default function LatestArticles() {
                 <p>{t('home.aboutRole')}</p>
               </div>
             </div>
-            <p className="about-bio">{pick(profile?.bioZh, profile?.bioEn) || t('home.aboutBioFallback')}</p>
+            <p className="about-bio">
+              {pick(profile?.bioZh, profile?.bioEn) || t('home.aboutBioFallback')}
+            </p>
             <div className="about-focus">
               {focusTags.map((item) => (
                 <span key={item}>{item}</span>
@@ -114,12 +116,20 @@ export default function LatestArticles() {
             </div>
             <div className="about-socials">
               {(profile?.socials || []).slice(0, 3).map((item) => (
-                <a key={`${item.label}-${item.url}`} href={item.url} target="_blank" rel="noreferrer" aria-label={item.label}>
+                <a
+                  key={`${item.label}-${item.url}`}
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={item.label}
+                >
                   {getSocialIcon(item.label, item.url)}
                 </a>
               ))}
             </div>
-            <Link to="/about" className="article-more about-link">{t('common.learnMore')}</Link>
+            <Link to="/about" className="article-more about-link">
+              {t('common.learnMore')}
+            </Link>
           </div>
         </aside>
       </div>
