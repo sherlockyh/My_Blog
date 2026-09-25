@@ -2,6 +2,8 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { AuditService } from '../src/common/audit/audit.service';
+import { JwtGuard } from '../src/common/guards/jwt.guard';
 import { PrismaService } from '../src/common/prisma/prisma.service';
 import { RedisService } from '../src/common/redis/redis.service';
 
@@ -11,6 +13,7 @@ import { RedisService } from '../src/common/redis/redis.service';
  */
 describe('App (e2e)', () => {
   let app: INestApplication;
+  const auditLog = jest.fn();
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -24,6 +27,12 @@ describe('App (e2e)', () => {
           count: async () => 1,
           findUnique: async () => null,
           create: async () => ({}),
+        },
+        project: {
+          create: async ({ data }: { data: Record<string, unknown> }) => ({
+            id: 7,
+            ...data,
+          }),
         },
       })
       .overrideProvider(RedisService)
@@ -39,6 +48,11 @@ describe('App (e2e)', () => {
           eval: async () => 1,
         },
       })
+      .overrideProvider(AuditService)
+      .useValue({ log: auditLog })
+      // 审计断言路由在 JwtGuard 之后，测试中直接放行
+      .overrideGuard(JwtGuard)
+      .useValue({ canActivate: () => true })
       .compile();
 
     app = moduleRef.createNestApplication();
@@ -79,5 +93,24 @@ describe('App (e2e)', () => {
 
   it('/api/auth/login 缺字段被全局校验管道拒绝', async () => {
     await request(app.getHttpServer()).post('/api/auth/login').send({}).expect(400);
+  });
+
+  it('审计拦截器记录业务原始返回值而非响应包络（守护拦截器注册顺序）', async () => {
+    auditLog.mockClear();
+    const res = await request(app.getHttpServer())
+      .post('/api/admin/projects')
+      .send({ titleZh: '审计断言项目' })
+      .expect(201);
+    // 响应侧是包络
+    expect(res.body).toMatchObject({ code: 0, data: { id: 7, titleZh: '审计断言项目' } });
+    // 审计侧必须看到 handler 原始返回值：detail 从 result.titleZh 取到业务字段。
+    // 若 AuditInterceptor 被注册到 TransformInterceptor 外层，这里会拿到包络
+    // 导致 titleZh 丢失，用例即失败。
+    expect(auditLog).toHaveBeenCalledTimes(1);
+    const arg = auditLog.mock.calls[0][0];
+    expect(arg.action).toBe('project.create');
+    expect(arg.targetId).toBe(7);
+    expect(arg.detail).toMatchObject({ titleZh: '审计断言项目' });
+    expect(arg.detail).not.toHaveProperty('code');
   });
 });

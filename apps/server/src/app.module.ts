@@ -38,9 +38,10 @@ import { HealthModule } from './modules/health/health.module';
     UploadModule,
   ],
   providers: [
-    // 审计拦截器须先于 TransformInterceptor 注册，保证审计记录的是原始返回值而非响应包络
-    { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
+    // 先注册的拦截器在洋葱外层。TransformInterceptor 须在外、AuditInterceptor 在内，
+    // 审计的 tap 才能记录 handler 的原始返回值而非响应包络（有 e2e 断言守护）
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
     { provide: APP_FILTER, useClass: HttpExceptionFilter },
     // 限流守卫全局注册，无 @RateLimit 装饰器的路由直接放行
     { provide: APP_GUARD, useClass: RateLimitGuard },

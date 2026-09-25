@@ -6,7 +6,7 @@ import { fileURLToPath, URL } from 'node:url';
  * 按环境注入 CSP meta：
  * - connect-src：'self' + 天气组件的 open-meteo 域名；开发环境额外放行 vite dev server；
  *   可用 VITE_CSP_CONNECT_SRC（逗号分隔）追加跨域 API
- * - img-src：默认 data:/https:，生产若走 http 对象存储需 VITE_CSP_IMG_SRC 覆盖
+ * - img-src：默认 data:/https:；dev 额外放行本地 MinIO，生产 http 源用 VITE_CSP_IMG_SRC 覆盖
  */
 function injectCsp(mode: string): Plugin {
   const env = loadEnv(mode, process.cwd(), '');
@@ -22,7 +22,11 @@ function injectCsp(mode: string): Plugin {
     ...(isProd ? [] : ['http://localhost:5173', 'ws://localhost:5173']),
     ...extraConnect,
   ];
-  const imgSrc = env.VITE_CSP_IMG_SRC || "'self' data: https:";
+  // dev 默认放行本地 MinIO（S3_PUBLIC_BASE_URL 默认 http://localhost:9000），
+  // 生产若用 https: 之外的图片源需 VITE_CSP_IMG_SRC 覆盖
+  const imgSrc =
+    env.VITE_CSP_IMG_SRC ||
+    (isProd ? "'self' data: https:" : "'self' data: https: http://localhost:9000");
   const csp = [
     "default-src 'self'",
     "base-uri 'self'",
