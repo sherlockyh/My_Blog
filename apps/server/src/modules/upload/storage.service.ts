@@ -21,7 +21,10 @@ export class StorageService implements OnModuleInit {
 
   constructor() {
     this.bucket = process.env.S3_BUCKET || 'my-blog';
-    this.publicBaseUrl = (process.env.S3_PUBLIC_BASE_URL || 'http://localhost:9000').replace(/\/+$/, '');
+    this.publicBaseUrl = (process.env.S3_PUBLIC_BASE_URL || 'http://localhost:9000').replace(
+      /\/+$/,
+      '',
+    );
     this.client = new S3Client({
       endpoint: process.env.S3_ENDPOINT || 'http://localhost:9000',
       region: process.env.S3_REGION || 'us-east-1',
@@ -39,7 +42,9 @@ export class StorageService implements OnModuleInit {
       await this.ensureBucket();
     } catch (error) {
       // MinIO 未就绪不阻塞应用启动，首次上传时会重试初始化。
-      this.logger.warn(`MinIO 桶初始化失败，将在首次上传时重试: ${error instanceof Error ? error.message : error}`);
+      this.logger.warn(
+        `MinIO 桶初始化失败，将在首次上传时重试: ${error instanceof Error ? error.message : error}`,
+      );
     }
   }
 

@@ -8,7 +8,7 @@
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "lint": "eslint .",
     "start": "node dist/main.js",
-    "seed": "tsx src/prisma/seed.ts",
+    "seed": "tsx prisma/seed.ts",
     "prisma:push": "prisma db push",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",

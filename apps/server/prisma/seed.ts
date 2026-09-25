@@ -9,7 +9,8 @@ const articles = [
     titleZh: 'Monorepo 实践：用 pnpm + Turborepo 管理全栈项目',
     titleEn: 'Monorepo in Practice: pnpm + Turborepo',
     summaryZh: '把前端、后端、共享类型放进同一个仓库，用 pnpm workspace 与 Turborepo 串起开发流。',
-    summaryEn: 'Put frontend, backend and shared types in one repo, wiring the dev flow with pnpm workspace and Turborepo.',
+    summaryEn:
+      'Put frontend, backend and shared types in one repo, wiring the dev flow with pnpm workspace and Turborepo.',
     contentZh: `## 为什么是 Monorepo
 
 全栈个人项目最大的痛点是**类型不同步**：后端改了 DTO，前端还在用旧字段。把代码放进同一个仓库，共享包就成了唯一的事实来源。
@@ -67,7 +68,8 @@ Sub-packages reference each other via \`workspace:*\`; pnpm links them so edits 
     titleZh: 'Ant Design 5 深色模式正确姿势',
     titleEn: 'Dark Mode Done Right with Ant Design 5',
     summaryZh: '用 ConfigProvider 的 darkAlgorithm 加上 CSS 变量，让自定义区块也完美融入暗色主题。',
-    summaryEn: 'Combine ConfigProvider darkAlgorithm with CSS variables so custom sections blend into the dark theme.',
+    summaryEn:
+      'Combine ConfigProvider darkAlgorithm with CSS variables so custom sections blend into the dark theme.',
     contentZh: `## 两个层面
 
 1. **antd 组件**：切换 \`theme.algorithm\` 为 \`darkAlgorithm\`；
@@ -111,7 +113,8 @@ Toggling only flips a \`data-theme\` attribute on \`document.documentElement\`.
     titleZh: '用 Redis 实现文章浏览量计数',
     titleEn: 'Article View Counting with Redis',
     summaryZh: 'INCR 计数、IP 防刷、定时回写数据库：一个轻量可靠的浏览量方案。',
-    summaryEn: 'INCR counting, IP dedup and scheduled DB flush: a lightweight and reliable view-count design.',
+    summaryEn:
+      'INCR counting, IP dedup and scheduled DB flush: a lightweight and reliable view-count design.',
     contentZh: `## 为什么不直接写数据库
 
 每次阅读都 UPDATE 数据库，写放大严重；Redis 的 \`INCR\` 是原子操作，天然适合计数。
@@ -148,7 +151,8 @@ The counter stores the **total** (initialized from DB on first miss), so after a
     titleZh: 'NestJS 入门：从零搭建 REST API',
     titleEn: 'Getting Started with NestJS: Building a REST API',
     summaryZh: '模块、控制器、服务三件套，加上全局拦截器统一响应结构。（草稿）',
-    summaryEn: 'Modules, controllers, providers, plus a global interceptor for unified response shape. (draft)',
+    summaryEn:
+      'Modules, controllers, providers, plus a global interceptor for unified response shape. (draft)',
     contentZh: `## 三件套
 
 NestJS 的核心是 **Module / Controller / Service**：控制器负责路由，服务负责逻辑，模块负责组装。
@@ -182,7 +186,8 @@ async function main() {
         titleZh: '用代码创造有趣的数字体验',
         titleEn: 'Creating fun digital experiences with code',
         descZh: '热爱前端开发与产品设计，喜欢把复杂的想法变成简洁、美观且好用的 Web 应用。',
-        descEn: 'Passionate about frontend development and product design, turning complex ideas into simple, beautiful and usable web apps.',
+        descEn:
+          'Passionate about frontend development and product design, turning complex ideas into simple, beautiful and usable web apps.',
       },
       features: [
         { icon: 'code', titleZh: '前端开发', titleEn: 'Frontend', descZh: '', descEn: '' },
@@ -229,9 +234,39 @@ async function main() {
   if ((await prisma.project.count()) === 0) {
     await prisma.project.createMany({
       data: [
-        { titleZh: '数据可视化平台', titleEn: 'Insight Dashboard', descZh: '基于 Vue3 + ECharts 的数据可视化解决方案。', descEn: 'A data visualization solution built with Vue3 + ECharts.', cover: '/images/projects/dataviz.svg', tags: ['Vue3', 'ECharts'], link: 'https://github.com', featured: true, sort: 1 },
-        { titleZh: '任务管理应用', titleEn: 'TaskFlow', descZh: '简洁优雅的待办事项和项目管理工具。', descEn: 'A clean and elegant todo & project management tool.', cover: '/images/projects/taskflow.svg', tags: ['React', 'Node.js'], link: 'https://github.com', featured: true, sort: 2 },
-        { titleZh: '个人旅行博客', titleEn: 'Travel Journal', descZh: '分享旅行故事与照片的静态博客。', descEn: 'A static blog sharing travel stories and photos.', cover: '/images/projects/travel.svg', tags: ['静态博客', '摄影'], link: 'https://github.com', featured: true, sort: 3 },
+        {
+          titleZh: '数据可视化平台',
+          titleEn: 'Insight Dashboard',
+          descZh: '基于 Vue3 + ECharts 的数据可视化解决方案。',
+          descEn: 'A data visualization solution built with Vue3 + ECharts.',
+          cover: '/images/projects/dataviz.svg',
+          tags: ['Vue3', 'ECharts'],
+          link: 'https://github.com',
+          featured: true,
+          sort: 1,
+        },
+        {
+          titleZh: '任务管理应用',
+          titleEn: 'TaskFlow',
+          descZh: '简洁优雅的待办事项和项目管理工具。',
+          descEn: 'A clean and elegant todo & project management tool.',
+          cover: '/images/projects/taskflow.svg',
+          tags: ['React', 'Node.js'],
+          link: 'https://github.com',
+          featured: true,
+          sort: 2,
+        },
+        {
+          titleZh: '个人旅行博客',
+          titleEn: 'Travel Journal',
+          descZh: '分享旅行故事与照片的静态博客。',
+          descEn: 'A static blog sharing travel stories and photos.',
+          cover: '/images/projects/travel.svg',
+          tags: ['静态博客', '摄影'],
+          link: 'https://github.com',
+          featured: true,
+          sort: 3,
+        },
       ],
     });
   }
@@ -239,10 +274,38 @@ async function main() {
   if ((await prisma.resource.count()) === 0) {
     await prisma.resource.createMany({
       data: [
-        { titleZh: 'React 官方文档', titleEn: 'React Docs', descZh: 'React 官方教程与 API 参考。', descEn: 'Official React tutorial and API reference.', link: 'https://react.dev', category: '文档' },
-        { titleZh: 'Ant Design', titleEn: 'Ant Design', descZh: '企业级 UI 组件库。', descEn: 'Enterprise-class UI component library.', link: 'https://ant.design', category: '组件库' },
-        { titleZh: 'NestJS 文档', titleEn: 'NestJS Docs', descZh: '渐进式 Node.js 框架官方文档。', descEn: 'Official docs of the progressive Node.js framework.', link: 'https://docs.nestjs.com', category: '文档' },
-        { titleZh: 'Open-Meteo', titleEn: 'Open-Meteo', descZh: '免费无需 Key 的天气 API。', descEn: 'Free weather API without an API key.', link: 'https://open-meteo.com', category: 'API' },
+        {
+          titleZh: 'React 官方文档',
+          titleEn: 'React Docs',
+          descZh: 'React 官方教程与 API 参考。',
+          descEn: 'Official React tutorial and API reference.',
+          link: 'https://react.dev',
+          category: '文档',
+        },
+        {
+          titleZh: 'Ant Design',
+          titleEn: 'Ant Design',
+          descZh: '企业级 UI 组件库。',
+          descEn: 'Enterprise-class UI component library.',
+          link: 'https://ant.design',
+          category: '组件库',
+        },
+        {
+          titleZh: 'NestJS 文档',
+          titleEn: 'NestJS Docs',
+          descZh: '渐进式 Node.js 框架官方文档。',
+          descEn: 'Official docs of the progressive Node.js framework.',
+          link: 'https://docs.nestjs.com',
+          category: '文档',
+        },
+        {
+          titleZh: 'Open-Meteo',
+          titleEn: 'Open-Meteo',
+          descZh: '免费无需 Key 的天气 API。',
+          descEn: 'Free weather API without an API key.',
+          link: 'https://open-meteo.com',
+          category: 'API',
+        },
       ],
     });
   }
@@ -256,13 +319,11 @@ async function main() {
     });
   }
 
-  // eslint-disable-next-line no-console
   console.log('Seed done');
 }
 
 main()
   .catch((e) => {
-    // eslint-disable-next-line no-console
     console.error(e);
     process.exit(1);
   })

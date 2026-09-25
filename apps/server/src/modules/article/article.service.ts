@@ -1,12 +1,17 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ArticleStatus } from '@my-blog/shared';
 import { Prisma } from '@prisma/client';
-import { CACHE_KEYS, CACHE_TTL } from '../../common/cache/cache-keys';
+import { CACHE_KEYS, CACHE_TTL } from '../../common/redis/cache-keys';
 import { CacheService } from '../../common/cache/cache.service';
 import { rethrowPrismaError } from '../../common/errors/prisma-error.mapper';
 import { getPageParams } from '../../common/utils/pagination';
-import { ViewCountService } from '../view-count/services/view-count.service';
-import { AdminArticleQueryDto, ArticleQueryDto, CreateArticleDto, UpdateArticleDto } from './dto/article.dto';
+import { ViewCountService } from '../view-count/view-count.service';
+import {
+  AdminArticleQueryDto,
+  ArticleQueryDto,
+  CreateArticleDto,
+  UpdateArticleDto,
+} from './dto/article.dto';
 import { toArticleDetailDto, toArticleListDtos } from './mappers/article.mapper';
 import { ArticleRepository } from './repositories/article.repository';
 
@@ -34,7 +39,10 @@ export class ArticleService {
       const filteredWhere = { ...where };
       const cursor = this.decodeCursor(query.cursor);
       const cursorWhere = {
-        OR: [{ publishedAt: { lt: cursor.publishedAt } }, { publishedAt: cursor.publishedAt, id: { lt: cursor.id } }],
+        OR: [
+          { publishedAt: { lt: cursor.publishedAt } },
+          { publishedAt: cursor.publishedAt, id: { lt: cursor.id } },
+        ],
       };
       let pageWhere = { ...where, ...cursorWhere };
       if (where.OR) {
@@ -49,7 +57,13 @@ export class ArticleService {
       const map = await this.views.getViewsMap(pageRows.map((r) => r.id));
       const items = toArticleListDtos(pageRows, map);
       const last = pageRows.at(-1);
-      return { items, total, page, pageSize, nextCursor: rows.length > pageSize && last ? this.encodeCursor(last) : undefined };
+      return {
+        items,
+        total,
+        page,
+        pageSize,
+        nextCursor: rows.length > pageSize && last ? this.encodeCursor(last) : undefined,
+      };
     }
     const [rows, total] = await Promise.all([
       this.articles.findPublicPage(where, skip, take),
@@ -58,7 +72,13 @@ export class ArticleService {
     const map = await this.views.getViewsMap(rows.map((r) => r.id));
     const items = toArticleListDtos(rows, map);
     const last = rows.at(-1);
-    return { items, total, page, pageSize, nextCursor: total > page * pageSize && last ? this.encodeCursor(last) : undefined };
+    return {
+      items,
+      total,
+      page,
+      pageSize,
+      nextCursor: total > page * pageSize && last ? this.encodeCursor(last) : undefined,
+    };
   }
 
   /** 公开详情：记录浏览量 */
@@ -116,7 +136,11 @@ export class ArticleService {
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const slug = await this.uniqueSlug(slugInput, fallbackTitle);
       try {
-        const article = await this.articles.create(dto, slug, dto.status === ArticleStatus.PUBLISHED ? new Date() : null);
+        const article = await this.articles.create(
+          dto,
+          slug,
+          dto.status === ArticleStatus.PUBLISHED ? new Date() : null,
+        );
         await this.clearArticleCaches();
         return article;
       } catch (err) {
@@ -132,7 +156,8 @@ export class ArticleService {
     if (!existing) throw new NotFoundException('Article not found');
 
     const fallbackTitle = dto.titleEn || dto.titleZh || existing.titleEn || existing.titleZh;
-    const toPublished = dto.status === ArticleStatus.PUBLISHED && existing.status !== ArticleStatus.PUBLISHED;
+    const toPublished =
+      dto.status === ArticleStatus.PUBLISHED && existing.status !== ArticleStatus.PUBLISHED;
     let slugInput = dto.slug;
     for (let attempt = 0; attempt < 3; attempt += 1) {
       let slug = existing.slug;
@@ -140,7 +165,16 @@ export class ArticleService {
         slug = await this.uniqueSlug(slugInput, fallbackTitle, id);
       }
       try {
-        const article = await this.articles.update(id, dto, slug, toPublished ? new Date() : dto.status === ArticleStatus.DRAFT ? null : existing.publishedAt);
+        const article = await this.articles.update(
+          id,
+          dto,
+          slug,
+          toPublished
+            ? new Date()
+            : dto.status === ArticleStatus.DRAFT
+              ? null
+              : existing.publishedAt,
+        );
         await this.clearArticleCaches();
         return article;
       } catch (err) {
@@ -169,7 +203,7 @@ export class ArticleService {
     const base = this.slugify(input || fallbackTitle) || `post-${Date.now()}`;
     let slug = base;
     let i = 2;
-    // eslint-disable-next-line no-constant-condition
+
     while (true) {
       const found = await this.articles.findBySlug(slug);
       if (!found || found.id === excludeId) return slug;
@@ -200,7 +234,8 @@ export class ArticleService {
       const [dateText, idText] = Buffer.from(cursor, 'base64url').toString('utf8').split('|');
       const publishedAt = new Date(dateText);
       const id = Number(idText);
-      if (!Number.isInteger(id) || Number.isNaN(publishedAt.getTime())) throw new Error('Invalid cursor');
+      if (!Number.isInteger(id) || Number.isNaN(publishedAt.getTime()))
+        throw new Error('Invalid cursor');
       return { publishedAt, id };
     } catch {
       throw new BadRequestException('Invalid cursor');

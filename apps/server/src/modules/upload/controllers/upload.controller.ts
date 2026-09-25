@@ -1,11 +1,18 @@
-import { BadRequestException, Controller, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { extname } from 'path';
 import { JwtGuard } from '../../../common/guards/jwt.guard';
 import { RateLimit } from '../../../common/guards/rate-limit.decorator';
 import { RateLimitGuard } from '../../../common/guards/rate-limit.guard';
-import { StorageService } from '../services/storage.service';
+import { StorageService } from '../storage.service';
 
 const ALLOWED_TYPES: Record<string, string[]> = {
   '.png': ['image/png'],

@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto';
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { PrismaService } from '../../../common/prisma/prisma.service';
-import { RedisService } from '../../../common/redis/redis.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
+import { RedisService } from '../../common/redis/redis.service';
 
 const RELEASE_LOCK_SCRIPT = `
 if redis.call('get', KEYS[1]) == ARGV[1] then
@@ -75,7 +75,9 @@ export class ViewCountService implements OnModuleDestroy {
       return this.getViews(id);
     } catch (err) {
       // 浏览量不是文章详情的强依赖；Redis 抖动时降级返回 DB 持久化值，保证详情可访问。
-      this.logger.warn(`Record view fallback to DB value: article=${id}; ${(err as Error).message}`);
+      this.logger.warn(
+        `Record view fallback to DB value: article=${id}; ${(err as Error).message}`,
+      );
       return this.getDbViews(id);
     }
   }
@@ -201,7 +203,9 @@ export class ViewCountService implements OnModuleDestroy {
     try {
       await this.flushToDb();
     } catch (err) {
-      this.logger.error(`Flush article view counters on shutdown failed: ${(err as Error).message}`);
+      this.logger.error(
+        `Flush article view counters on shutdown failed: ${(err as Error).message}`,
+      );
     }
   }
 }

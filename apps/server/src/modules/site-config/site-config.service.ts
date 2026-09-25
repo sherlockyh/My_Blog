@@ -1,9 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { FeatureItem, HeroConfig, ProfileDTO, SiteConfigDTO, SiteDTO, StatsDTO } from '@my-blog/shared';
-import { CACHE_KEYS, CACHE_TTL } from '../../common/cache/cache-keys';
+import {
+  FeatureItem,
+  HeroConfig,
+  ProfileDTO,
+  SiteConfigDTO,
+  SiteDTO,
+  StatsDTO,
+} from '@my-blog/shared';
+import { CACHE_KEYS, CACHE_TTL } from '../../common/redis/cache-keys';
 import { CacheService } from '../../common/cache/cache.service';
 import { PrismaService } from '../../common/prisma/prisma.service';
-import { ViewCountService } from '../view-count/services/view-count.service';
+import { ViewCountService } from '../view-count/view-count.service';
 import { UpdateProfileDto, UpdateSiteConfigDto } from './dto/site-config.dto';
 
 const DEFAULT_HERO: HeroConfig = {
@@ -11,7 +18,8 @@ const DEFAULT_HERO: HeroConfig = {
   titleZh: '用代码创造有趣的数字体验',
   titleEn: 'Creating fun digital experiences with code',
   descZh: '热爱前端开发与产品设计，喜欢把复杂的想法变成简洁、美观且好用的 Web 应用。',
-  descEn: 'Passionate about frontend development and product design, turning complex ideas into simple, beautiful and usable web apps.',
+  descEn:
+    'Passionate about frontend development and product design, turning complex ideas into simple, beautiful and usable web apps.',
 };
 
 const DEFAULT_FEATURES: FeatureItem[] = [
@@ -81,14 +89,27 @@ export class SiteConfigService {
     const current = (await this.getSite()).config;
     const next: SiteConfigDTO = {
       hero: { ...current.hero, ...dto.hero },
-      features: dto.features?.length ? normalizeFeatures(dto.features as FeatureItem[]) : current.features,
+      features: dto.features?.length
+        ? normalizeFeatures(dto.features as FeatureItem[])
+        : current.features,
       weatherCity: dto.weatherCity ?? current.weatherCity,
       announcement: dto.announcement ?? current.announcement,
     };
     await this.prisma.siteConfig.upsert({
       where: { id: 1 },
-      create: { id: 1, hero: next.hero as any, features: next.features as any, weatherCity: next.weatherCity, announcement: next.announcement },
-      update: { hero: next.hero as any, features: next.features as any, weatherCity: next.weatherCity, announcement: next.announcement },
+      create: {
+        id: 1,
+        hero: next.hero as any,
+        features: next.features as any,
+        weatherCity: next.weatherCity,
+        announcement: next.announcement,
+      },
+      update: {
+        hero: next.hero as any,
+        features: next.features as any,
+        weatherCity: next.weatherCity,
+        announcement: next.announcement,
+      },
     });
     await this.cache.del(CACHE_KEYS.site);
     return next;
@@ -99,21 +120,37 @@ export class SiteConfigService {
     const next: ProfileDTO = { ...current, ...dto, socials: dto.socials ?? current.socials };
     await this.prisma.profile.upsert({
       where: { id: 1 },
-      create: { id: 1, name: next.name, avatar: next.avatar, bioZh: next.bioZh, bioEn: next.bioEn, location: next.location, socials: next.socials as any },
-      update: { name: next.name, avatar: next.avatar, bioZh: next.bioZh, bioEn: next.bioEn, location: next.location, socials: next.socials as any },
+      create: {
+        id: 1,
+        name: next.name,
+        avatar: next.avatar,
+        bioZh: next.bioZh,
+        bioEn: next.bioEn,
+        location: next.location,
+        socials: next.socials as any,
+      },
+      update: {
+        name: next.name,
+        avatar: next.avatar,
+        bioZh: next.bioZh,
+        bioEn: next.bioEn,
+        location: next.location,
+        socials: next.socials as any,
+      },
     });
     await this.cache.del(CACHE_KEYS.site);
     return next;
   }
 
   async stats(): Promise<StatsDTO> {
-    const [totalViews, articleCount, publishedCount, projectCount, messageCount] = await Promise.all([
-      this.views.totalViews(),
-      this.prisma.article.count(),
-      this.prisma.article.count({ where: { status: 'PUBLISHED' } }),
-      this.prisma.project.count(),
-      this.prisma.message.count(),
-    ]);
+    const [totalViews, articleCount, publishedCount, projectCount, messageCount] =
+      await Promise.all([
+        this.views.totalViews(),
+        this.prisma.article.count(),
+        this.prisma.article.count({ where: { status: 'PUBLISHED' } }),
+        this.prisma.project.count(),
+        this.prisma.message.count(),
+      ]);
     return { totalViews, articleCount, publishedCount, projectCount, messageCount };
   }
 }
