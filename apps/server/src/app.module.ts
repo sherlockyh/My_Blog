@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { RedisModule } from './common/redis/redis.module';
 import { validateConfig } from './common/config/config.validation';
@@ -18,21 +16,15 @@ import { SiteConfigModule } from './modules/site-config/site-config.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { ViewCountModule } from './modules/view-count/view-count.module';
 import { HealthModule } from './modules/health/health.module';
-import { AiModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, validate: validateConfig }),
     ScheduleModule.forRoot(),
-    ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), 'uploads'),
-      serveRoot: '/uploads',
-    }),
     PrismaModule,
     RedisModule,
     ViewCountModule,
     HealthModule,
-    AiModule,
     AuthModule,
     ArticleModule,
     ProjectModule,
