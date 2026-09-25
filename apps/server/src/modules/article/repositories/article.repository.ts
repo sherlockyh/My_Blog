@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ArticleStatus } from '@my-blog/shared';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../common/prisma/prisma.service';
 import { CreateArticleDto, UpdateArticleDto } from '../dto/article.dto';
@@ -41,6 +42,15 @@ export class ArticleRepository {
       select: ARTICLE_LIST_SELECT,
       orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
       take,
+    });
+  }
+
+  /** 归档/分类/侧栏树等派生展示用的全量精简清单（不含正文） */
+  findAllPublished() {
+    return this.prisma.article.findMany({
+      where: { status: ArticleStatus.PUBLISHED },
+      select: ARTICLE_LIST_SELECT,
+      orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
     });
   }
 

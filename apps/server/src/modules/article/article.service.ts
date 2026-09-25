@@ -101,6 +101,16 @@ export class ArticleService {
     return tags;
   }
 
+  /**
+   * 全量公开文章精简清单（不含正文）：归档页、分类页、详情页侧栏树的共同数据源，
+   * 替代前端 pageSize:50 全量拉取——那是文章超过 50 篇后会静默丢数据的临时方案。
+   */
+  async listAllPublished() {
+    const rows = await this.articles.findAllPublished();
+    const map = await this.views.getViewsMap(rows.map((r) => r.id));
+    return { items: toArticleListDtos(rows, map) };
+  }
+
   /** 后台列表：数据会持续增长，保持服务端分页，避免管理页一次性拉取正文大字段。 */
   async adminList(query: AdminArticleQueryDto) {
     const { page, pageSize, skip, take } = getPageParams(query);

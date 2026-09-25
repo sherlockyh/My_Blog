@@ -17,6 +17,11 @@ export class ArticleController {
     return this.article.allTags();
   }
 
+  @Get('all')
+  all() {
+    return this.article.listAllPublished();
+  }
+
   @Get(':slug')
   detail(@Param('slug') slug: string, @Req() req: RequestContext) {
     return this.article.findBySlug(slug, req.ip ?? 'unknown');
