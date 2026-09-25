@@ -38,6 +38,13 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Test
+        run: pnpm --filter @my-blog/server test
+        env:
+          # e2e 启动需通过 config.validation 的格式校验，外部依赖已 mock，无需真实服务
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          REDIS_URL: redis://localhost:6379
+
       - name: Typecheck
         run: pnpm typecheck
 

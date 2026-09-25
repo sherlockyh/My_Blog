@@ -28,6 +28,11 @@ export default tseslint.config(
     },
   },
   {
+    files: ['apps/server/jest.config.js', 'apps/server/test/*.js'],
+    // CommonJS 风格的 jest 配置文件，module/require 是合法全局
+    languageOptions: { sourceType: 'commonjs' },
+  },
+  {
     files: ['apps/web/**/*.{ts,tsx}'],
     plugins: { 'react-hooks': reactHooks },
     rules: {
