@@ -2,8 +2,8 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
-import zh from './zh';
-import en from './en';
+import zh from './locales/zh';
+import en from './locales/en';
 
 const saved = localStorage.getItem('blog-lang') || 'zh';
 dayjs.locale(saved === 'en' ? 'en' : 'zh-cn');
