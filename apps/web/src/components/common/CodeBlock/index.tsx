@@ -33,7 +33,11 @@ export default function CodeBlock({ code, language }: CodeBlockProps) {
     <div className="article-code-block">
       <div className="article-code-toolbar">
         <span>{language || 'code'}</span>
-        <button type="button" aria-label={copied ? t('articles.copied') : t('articles.copy')} onClick={copy}>
+        <button
+          type="button"
+          aria-label={copied ? t('articles.copied') : t('articles.copy')}
+          onClick={copy}
+        >
           {copied ? <CheckOutlined /> : <CopyOutlined />}
           {copied ? t('articles.copied') : t('articles.copy')}
         </button>

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { ProjectDTO } from '@my-blog/shared';
 import { projectApi } from '@/services/project';
-import ProjectCard from '@/components/ProjectCard';
+import ProjectCard from '@/components/blog/ProjectCard';
 import './styles/index.less';
 
 export default function FeaturedProjects() {
@@ -13,14 +13,19 @@ export default function FeaturedProjects() {
   const [projects, setProjects] = useState<ProjectDTO[]>([]);
 
   useEffect(() => {
-    projectApi.projects().then(setProjects).catch(() => setProjects([]));
+    projectApi
+      .projects()
+      .then(setProjects)
+      .catch(() => setProjects([]));
   }, []);
 
   const featured = [...projects]
     .sort((a, b) => a.sort - b.sort)
     .filter((project) => project.featured)
     .slice(0, 3);
-  const rows = featured.length ? featured : [...projects].sort((a, b) => a.sort - b.sort).slice(0, 3);
+  const rows = featured.length
+    ? featured
+    : [...projects].sort((a, b) => a.sort - b.sort).slice(0, 3);
 
   if (!rows.length) return null;
 

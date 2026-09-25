@@ -11,8 +11,8 @@ import ArticleBody from './components/ArticleBody';
 import ArticleHeader from './components/ArticleHeader';
 import ArticleLeftRail from './components/ArticleLeftRail';
 import ArticleRightRail from './components/ArticleRightRail';
-import BackTopButton from './components/BackTopButton';
-import { getToc } from './utils/toc';
+import BackTopButton from '@/components/common/BackTopButton';
+import { getToc } from '@/utils/toc';
 import './styles/index.less';
 
 export default function ArticleDetail() {
@@ -175,7 +175,12 @@ export default function ArticleDetail() {
           />
         </article>
 
-        <ArticleRightRail toc={toc} activeHeadingId={activeHeadingId} related={related} tags={article.tags} />
+        <ArticleRightRail
+          toc={toc}
+          activeHeadingId={activeHeadingId}
+          related={related}
+          tags={article.tags}
+        />
       </div>
       <BackTopButton visible={readingProgress > 8} />
     </div>

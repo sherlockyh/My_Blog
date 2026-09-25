@@ -28,7 +28,11 @@ export default class ErrorBoundary extends Component<{ children: ReactNode }, Er
           title="页面加载失败"
           subTitle="请刷新页面重试，或稍后再访问。"
           extra={
-            <Button type="primary" className="btn-gradient" onClick={() => window.location.reload()}>
+            <Button
+              type="primary"
+              className="btn-gradient"
+              onClick={() => window.location.reload()}
+            >
               刷新页面
             </Button>
           }

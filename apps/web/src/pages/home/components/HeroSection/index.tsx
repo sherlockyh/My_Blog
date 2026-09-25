@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSiteStore } from '@/store/site';
 import { pick } from '@/utils/content';
-import WeatherChip from '@/components/WeatherChip';
+import WeatherChip from '@/components/blog/WeatherChip';
 import './styles/index.less';
 
 const DEFAULT_TITLE = '用代码创造有趣的数字体验';
@@ -44,7 +44,12 @@ export default function HeroSection() {
           </div>
           <div className="hero-actions">
             <Link to="/projects">
-              <Button type="primary" size="large" icon={<RocketOutlined />} className="btn-gradient">
+              <Button
+                type="primary"
+                size="large"
+                icon={<RocketOutlined />}
+                className="btn-gradient"
+              >
                 {t('hero.viewProjects')}
               </Button>
             </Link>

@@ -6,9 +6,18 @@ import './styles/index.less';
 
 export default function ProjectCard({ project }: { project: ProjectDTO }) {
   return (
-    <a className="card project-card" href={project.link || undefined} target={project.link ? '_blank' : undefined} rel="noreferrer">
+    <a
+      className="card project-card"
+      href={project.link || undefined}
+      target={project.link ? '_blank' : undefined}
+      rel="noreferrer"
+    >
       <div className="project-cover">
-        {project.cover ? <img src={project.cover} alt={pick(project.titleZh, project.titleEn)} /> : <div className="project-cover-fallback" />}
+        {project.cover ? (
+          <img src={project.cover} alt={pick(project.titleZh, project.titleEn)} />
+        ) : (
+          <div className="project-cover-fallback" />
+        )}
         {project.tags[0] && <span className="project-badge">{project.tags[0]}</span>}
       </div>
       <div className="project-body">
@@ -16,7 +25,9 @@ export default function ProjectCard({ project }: { project: ProjectDTO }) {
         <p>{pick(project.descZh, project.descEn)}</p>
         <div className="project-tags">
           {project.tags.map((tag) => (
-            <span key={tag} className="tag-chip">{tag}</span>
+            <span key={tag} className="tag-chip">
+              {tag}
+            </span>
           ))}
         </div>
       </div>
@@ -25,5 +36,9 @@ export default function ProjectCard({ project }: { project: ProjectDTO }) {
 }
 
 export function ProjectCardLink({ project }: { project: ProjectDTO }) {
-  return <Link to="/projects"><ProjectCard project={project} /></Link>;
+  return (
+    <Link to="/projects">
+      <ProjectCard project={project} />
+    </Link>
+  );
 }

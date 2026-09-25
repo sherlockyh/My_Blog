@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import ArticleCoverFallback from '@/components/blog/ArticleCoverFallback';
-import CodeBlock from '../CodeBlock';
-import type { TocItem } from '../../utils/toc';
+import CodeBlock from '@/components/common/CodeBlock';
+import type { TocItem } from '@/utils/toc';
 
 interface ArticleBodyProps {
   title: string;
@@ -18,7 +18,15 @@ interface ArticleBodyProps {
   toc: TocItem[];
 }
 
-export default function ArticleBody({ title, primaryTag, cover, summary, content, theme, toc }: ArticleBodyProps) {
+export default function ArticleBody({
+  title,
+  primaryTag,
+  cover,
+  summary,
+  content,
+  theme,
+  toc,
+}: ArticleBodyProps) {
   const { t } = useTranslation();
   let headingRenderIndex = 0;
   const renderHeading = (level: 2 | 3, children: ReactNode) => {
@@ -30,11 +38,7 @@ export default function ArticleBody({ title, primaryTag, cover, summary, content
   return (
     <>
       <div className="article-detail-cover card">
-        {cover ? (
-          <img src={cover} alt={title} />
-        ) : (
-          <ArticleCoverFallback label={primaryTag} />
-        )}
+        {cover ? <img src={cover} alt={title} /> : <ArticleCoverFallback label={primaryTag} />}
       </div>
 
       {summary && (
@@ -56,7 +60,11 @@ export default function ArticleBody({ title, primaryTag, cover, summary, content
                 const codeProps = props as HTMLAttributes<HTMLElement> & { inline?: boolean };
                 const language = /language-(\w+)/.exec(className || '')?.[1];
                 if (codeProps.inline || !language) {
-                  return <code className={className} {...codeProps}>{children}</code>;
+                  return (
+                    <code className={className} {...codeProps}>
+                      {children}
+                    </code>
+                  );
                 }
                 return <CodeBlock code={String(children).replace(/\n$/, '')} language={language} />;
               },

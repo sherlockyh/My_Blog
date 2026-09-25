@@ -5,7 +5,12 @@ export interface TocItem {
 }
 
 function createHeadingId(text: string, index: number) {
-  return `${text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-|-$/g, '') || 'section'}-${index}`;
+  return `${
+    text
+      .toLowerCase()
+      .replace(/[^\w\u4e00-\u9fa5]+/g, '-')
+      .replace(/^-|-$/g, '') || 'section'
+  }-${index}`;
 }
 
 export function getToc(content: string): TocItem[] {

@@ -28,8 +28,18 @@ export default function Footer() {
         </div>
         <span className="footer-links">
           {socials.map((item) => (
-            <a key={item.label} href={item.url} target="_blank" rel="noreferrer" aria-label={item.label}>
-              {item.label.toLowerCase().includes('github') ? <GithubOutlined /> : <GlobalOutlined />}
+            <a
+              key={item.label}
+              href={item.url}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={item.label}
+            >
+              {item.label.toLowerCase().includes('github') ? (
+                <GithubOutlined />
+              ) : (
+                <GlobalOutlined />
+              )}
             </a>
           ))}
           <a href="/admin">{t('footer.admin')}</a>

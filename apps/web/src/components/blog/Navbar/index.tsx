@@ -4,7 +4,7 @@ import { Drawer } from 'antd';
 import { CodeOutlined, MenuOutlined } from '@ant-design/icons';
 import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import ThemeToggle from '@/components/ThemeToggle';
+import ThemeToggle from '@/components/common/ThemeToggle';
 import './styles/index.less';
 
 const NAV_KEYS = [
@@ -58,7 +58,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      <Drawer title="Code with Joy" open={drawer} onClose={() => setDrawer(false)} placement="right">
+      <Drawer
+        title="Code with Joy"
+        open={drawer}
+        onClose={() => setDrawer(false)}
+        placement="right"
+      >
         <div className="drawer-nav">
           {NAV_KEYS.map((item) => (
             <NavLink

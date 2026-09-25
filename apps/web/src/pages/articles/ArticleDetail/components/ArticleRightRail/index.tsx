@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import type { ArticleDTO } from '@my-blog/shared';
 import { pick } from '@/utils/content';
-import type { TocItem } from '../../utils/toc';
+import type { TocItem } from '@/utils/toc';
 
 interface ArticleRightRailProps {
   toc: TocItem[];
@@ -13,7 +13,12 @@ interface ArticleRightRailProps {
   tags: string[];
 }
 
-export default function ArticleRightRail({ toc, activeHeadingId, related, tags }: ArticleRightRailProps) {
+export default function ArticleRightRail({
+  toc,
+  activeHeadingId,
+  related,
+  tags,
+}: ArticleRightRailProps) {
   const { t } = useTranslation();
 
   return (
@@ -21,15 +26,19 @@ export default function ArticleRightRail({ toc, activeHeadingId, related, tags }
       <section className="card sidebar-card article-toc-card">
         <h3 className="sidebar-title">{t('articles.toc')}</h3>
         <div className="article-toc">
-          {toc.length ? toc.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={`${item.level === 3 ? 'sub' : ''}${activeHeadingId === item.id ? ' active' : ''}`}
-            >
-              {item.text}
-            </a>
-          )) : <span>{t('articles.emptyToc')}</span>}
+          {toc.length ? (
+            toc.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={`${item.level === 3 ? 'sub' : ''}${activeHeadingId === item.id ? ' active' : ''}`}
+              >
+                {item.text}
+              </a>
+            ))
+          ) : (
+            <span>{t('articles.emptyToc')}</span>
+          )}
         </div>
       </section>
       <section className="card sidebar-card">
