@@ -8,7 +8,7 @@ import {
   StatsDTO,
 } from '@my-blog/shared';
 import { CACHE_KEYS, CACHE_TTL } from '../../common/redis/cache-keys';
-import { CacheService } from '../../common/cache/cache.service';
+import { RedisService } from '../../common/redis/redis.service';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { ViewCountService } from '../view-count/view-count.service';
 import { UpdateProfileDto, UpdateSiteConfigDto } from './dto/site-config.dto';
@@ -49,13 +49,13 @@ const DEFAULT_PROFILE: ProfileDTO = {
 export class SiteConfigService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly cache: CacheService,
+    private readonly redis: RedisService,
     private readonly views: ViewCountService,
   ) {}
 
   /** 公开接口：站点配置 + 个人信息，Redis 缓存 10 分钟 */
   async getSite(): Promise<SiteDTO> {
-    const cached = await this.cache.getJson<SiteDTO>(CACHE_KEYS.site);
+    const cached = await this.redis.cacheGetJson<SiteDTO>(CACHE_KEYS.site);
     if (cached) return cached;
 
     const [configRow, profileRow] = await Promise.all([
@@ -81,7 +81,7 @@ export class SiteConfigService {
           }
         : DEFAULT_PROFILE,
     };
-    await this.cache.setJson(CACHE_KEYS.site, site, CACHE_TTL.site);
+    await this.redis.cacheSetJson(CACHE_KEYS.site, site, CACHE_TTL.site);
     return site;
   }
 
@@ -111,7 +111,7 @@ export class SiteConfigService {
         announcement: next.announcement,
       },
     });
-    await this.cache.del(CACHE_KEYS.site);
+    await this.redis.cacheDel(CACHE_KEYS.site);
     return next;
   }
 
@@ -138,7 +138,7 @@ export class SiteConfigService {
         socials: next.socials as any,
       },
     });
-    await this.cache.del(CACHE_KEYS.site);
+    await this.redis.cacheDel(CACHE_KEYS.site);
     return next;
   }
 

@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { ArticleStatus } from '@my-blog/shared';
 import { Prisma } from '@prisma/client';
 import { CACHE_KEYS, CACHE_TTL } from '../../common/redis/cache-keys';
-import { CacheService } from '../../common/cache/cache.service';
+import { RedisService } from '../../common/redis/redis.service';
 import { rethrowPrismaError } from '../../common/errors/prisma-error.mapper';
 import { getPageParams } from '../../common/utils/pagination';
 import { ViewCountService } from '../view-count/view-count.service';
@@ -19,7 +19,7 @@ import { ArticleRepository } from './repositories/article.repository';
 export class ArticleService {
   constructor(
     private readonly articles: ArticleRepository,
-    private readonly cache: CacheService,
+    private readonly redis: RedisService,
     private readonly views: ViewCountService,
   ) {}
 
@@ -92,12 +92,12 @@ export class ArticleService {
   }
 
   async allTags() {
-    const cached = await this.cache.getJson<string[]>(CACHE_KEYS.articleTags);
+    const cached = await this.redis.cacheGetJson<string[]>(CACHE_KEYS.articleTags);
     if (cached) return cached;
 
     const rows = await this.articles.findPublishedTags();
     const tags = [...new Set(rows.flatMap((r) => r.tags))];
-    await this.cache.setJson(CACHE_KEYS.articleTags, tags, CACHE_TTL.articleTags);
+    await this.redis.cacheSetJson(CACHE_KEYS.articleTags, tags, CACHE_TTL.articleTags);
     return tags;
   }
 
@@ -196,7 +196,7 @@ export class ArticleService {
   }
 
   private async clearArticleCaches() {
-    await this.cache.del(CACHE_KEYS.articleTags);
+    await this.redis.cacheDel(CACHE_KEYS.articleTags);
   }
 
   private async uniqueSlug(input: string | undefined, fallbackTitle: string, excludeId?: number) {

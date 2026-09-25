@@ -1,35 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../common/prisma/prisma.service';
 import { PageQueryDto } from '../../common/dto/page-query.dto';
 import { rethrowPrismaError } from '../../common/errors/prisma-error.mapper';
 import { getPageParams, toPageResult } from '../../common/utils/pagination';
 import { CreateResourceDto, UpdateResourceDto } from './dto/resource.dto';
-import { toResourceDto, toResourceDtos } from './mappers/resource.mapper';
-import { ResourceRepository } from './repositories/resource.repository';
+
+const RESOURCE_ORDER_BY = [{ createdAt: 'desc' as const }, { id: 'desc' as const }];
 
 @Injectable()
 export class ResourceService {
-  constructor(private readonly resources: ResourceRepository) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   list() {
-    return this.resources.list().then(toResourceDtos);
+    return this.prisma.resource.findMany({ orderBy: RESOURCE_ORDER_BY });
   }
 
   async adminList(query: PageQueryDto) {
     const { page, pageSize, skip, take } = getPageParams(query);
     const [items, total] = await Promise.all([
-      this.resources.findPage(skip, take),
-      this.resources.count(),
+      this.prisma.resource.findMany({ orderBy: RESOURCE_ORDER_BY, skip, take }),
+      this.prisma.resource.count(),
     ]);
-    return toPageResult(toResourceDtos(items), total, page, pageSize);
+    return toPageResult(items, total, page, pageSize);
   }
 
   create(dto: CreateResourceDto) {
-    return this.resources.create(dto).then(toResourceDto);
+    return this.prisma.resource.create({ data: dto });
   }
 
   async update(id: number, dto: UpdateResourceDto) {
     try {
-      return toResourceDto(await this.resources.update(id, dto));
+      return await this.prisma.resource.update({ where: { id }, data: dto });
     } catch (err) {
       rethrowPrismaError(err, { notFound: 'Resource not found' });
     }
@@ -37,7 +38,7 @@ export class ResourceService {
 
   async remove(id: number) {
     try {
-      await this.resources.delete(id);
+      await this.prisma.resource.delete({ where: { id } });
       return { ok: true };
     } catch (err) {
       rethrowPrismaError(err, { notFound: 'Resource not found' });

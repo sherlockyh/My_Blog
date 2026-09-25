@@ -1,6 +1,16 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuditAction } from '../../../common/audit/audit.decorator';
-import { AuditInterceptor } from '../../../common/audit/audit.interceptor';
 import { PageQueryDto } from '../../../common/dto/page-query.dto';
 import { JwtGuard } from '../../../common/guards/jwt.guard';
 import { ProjectService } from '../project.service';
@@ -17,7 +27,6 @@ export class ProjectController {
 }
 
 @UseGuards(JwtGuard)
-@UseInterceptors(AuditInterceptor)
 @Controller('admin/projects')
 export class ProjectAdminController {
   constructor(private readonly project: ProjectService) {}
@@ -28,13 +37,23 @@ export class ProjectAdminController {
   }
 
   @Post()
-  @AuditAction({ action: 'project.create', targetType: 'project', targetIdPath: 'result.id', detailPaths: { titleZh: 'result.titleZh', featured: 'result.featured' } })
+  @AuditAction({
+    action: 'project.create',
+    targetType: 'project',
+    targetIdPath: 'result.id',
+    detailPaths: { titleZh: 'result.titleZh', featured: 'result.featured' },
+  })
   create(@Body() dto: CreateProjectDto) {
     return this.project.create(dto);
   }
 
   @Put(':id')
-  @AuditAction({ action: 'project.update', targetType: 'project', targetIdPath: 'result.id', detailPaths: { titleZh: 'result.titleZh', featured: 'result.featured' } })
+  @AuditAction({
+    action: 'project.update',
+    targetType: 'project',
+    targetIdPath: 'result.id',
+    detailPaths: { titleZh: 'result.titleZh', featured: 'result.featured' },
+  })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProjectDto) {
     return this.project.update(id, dto);
   }

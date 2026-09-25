@@ -1,6 +1,16 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuditAction } from '../../../common/audit/audit.decorator';
-import { AuditInterceptor } from '../../../common/audit/audit.interceptor';
 import { PageQueryDto } from '../../../common/dto/page-query.dto';
 import { JwtGuard } from '../../../common/guards/jwt.guard';
 import { ResourceService } from '../resource.service';
@@ -17,7 +27,6 @@ export class ResourceController {
 }
 
 @UseGuards(JwtGuard)
-@UseInterceptors(AuditInterceptor)
 @Controller('admin/resources')
 export class ResourceAdminController {
   constructor(private readonly resource: ResourceService) {}
@@ -28,13 +37,23 @@ export class ResourceAdminController {
   }
 
   @Post()
-  @AuditAction({ action: 'resource.create', targetType: 'resource', targetIdPath: 'result.id', detailPaths: { titleZh: 'result.titleZh', category: 'result.category' } })
+  @AuditAction({
+    action: 'resource.create',
+    targetType: 'resource',
+    targetIdPath: 'result.id',
+    detailPaths: { titleZh: 'result.titleZh', category: 'result.category' },
+  })
   create(@Body() dto: CreateResourceDto) {
     return this.resource.create(dto);
   }
 
   @Put(':id')
-  @AuditAction({ action: 'resource.update', targetType: 'resource', targetIdPath: 'result.id', detailPaths: { titleZh: 'result.titleZh', category: 'result.category' } })
+  @AuditAction({
+    action: 'resource.update',
+    targetType: 'resource',
+    targetIdPath: 'result.id',
+    detailPaths: { titleZh: 'result.titleZh', category: 'result.category' },
+  })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateResourceDto) {
     return this.resource.update(id, dto);
   }

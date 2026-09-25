@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { RedisModule } from './common/redis/redis.module';
 import { validateConfig } from './common/config/config.validation';
+import { AuditInterceptor } from './common/audit/audit.interceptor';
+import { AuditModule } from './common/audit/audit.module';
+import { RateLimitGuard } from './common/guards/rate-limit.guard';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
@@ -23,6 +26,7 @@ import { HealthModule } from './modules/health/health.module';
     ScheduleModule.forRoot(),
     PrismaModule,
     RedisModule,
+    AuditModule,
     ViewCountModule,
     HealthModule,
     AuthModule,
@@ -34,8 +38,12 @@ import { HealthModule } from './modules/health/health.module';
     UploadModule,
   ],
   providers: [
+    // 审计拦截器须先于 TransformInterceptor 注册，保证审计记录的是原始返回值而非响应包络
+    { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
     { provide: APP_FILTER, useClass: HttpExceptionFilter },
+    // 限流守卫全局注册，无 @RateLimit 装饰器的路由直接放行
+    { provide: APP_GUARD, useClass: RateLimitGuard },
   ],
 })
 export class AppModule {}

@@ -11,7 +11,6 @@ import { memoryStorage } from 'multer';
 import { extname } from 'path';
 import { JwtGuard } from '../../../common/guards/jwt.guard';
 import { RateLimit } from '../../../common/guards/rate-limit.decorator';
-import { RateLimitGuard } from '../../../common/guards/rate-limit.guard';
 import { StorageService } from '../storage.service';
 
 const ALLOWED_TYPES: Record<string, string[]> = {
@@ -28,7 +27,7 @@ export class UploadController {
 
   @Post()
   @RateLimit({ name: 'admin-upload', ttl: 60, limit: 20 })
-  @UseGuards(RateLimitGuard, JwtGuard)
+  @UseGuards(JwtGuard)
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),

@@ -1,10 +1,18 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuditAction } from '../../../common/audit/audit.decorator';
-import { AuditInterceptor } from '../../../common/audit/audit.interceptor';
 import { PageQueryDto } from '../../../common/dto/page-query.dto';
 import { JwtGuard } from '../../../common/guards/jwt.guard';
 import { RateLimit } from '../../../common/guards/rate-limit.decorator';
-import { RateLimitGuard } from '../../../common/guards/rate-limit.guard';
 import { MessageService } from '../message.service';
 import { CreateMessageDto } from '../dto/message.dto';
 
@@ -19,14 +27,12 @@ export class MessageController {
 
   @Post()
   @RateLimit({ name: 'message-create', ttl: 60, limit: 3 })
-  @UseGuards(RateLimitGuard)
   create(@Body() dto: CreateMessageDto) {
     return this.message.create(dto);
   }
 }
 
 @UseGuards(JwtGuard)
-@UseInterceptors(AuditInterceptor)
 @Controller('admin/messages')
 export class MessageAdminController {
   constructor(private readonly message: MessageService) {}

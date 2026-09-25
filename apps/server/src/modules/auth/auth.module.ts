@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { RateLimitGuard } from '../../common/guards/rate-limit.guard';
 import { PrismaModule } from '../../common/prisma/prisma.module';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './auth.service';
@@ -27,6 +26,6 @@ import { AuthService } from './auth.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, RateLimitGuard],
+  providers: [AuthService],
 })
 export class AuthModule {}
