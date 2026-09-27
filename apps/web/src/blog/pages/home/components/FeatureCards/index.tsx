@@ -24,8 +24,8 @@ const FALLBACK_FEATURES = [
     icon: 'thunder',
     titleZh: '高效开发',
     titleEn: 'Efficient Dev',
-    descZh: '专注于现代化前端技术栈，打造高性能的 Web 应用',
-    descEn: 'Building high-performance web apps with modern frontend stacks.',
+    descZh: '专注于现代化全栈技术栈，打造高性能的 Web 应用',
+    descEn: 'Building high-performance web apps with modern full-stack stacks.',
   },
   {
     icon: 'box',

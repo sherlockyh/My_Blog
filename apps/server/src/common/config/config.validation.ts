@@ -34,7 +34,8 @@ export function validateConfig(config: AppConfig) {
   // DB/Redis 是服务启动后的核心依赖：这里校验“配置存在且格式正确”，连通性留给 readiness。
   assertUrl('DATABASE_URL', config.DATABASE_URL, true);
   assertUrl('REDIS_URL', config.REDIS_URL, true);
-  // 对象存储：endpoint 是后端访问 MinIO 的内网地址，publicBaseUrl 是浏览器直连图片的地址，两者可以不同。
+  // 对象存储：endpoint 是后端访问 MinIO 的内网地址；publicBaseUrl 可选，
+  // 仅在浏览器需要直连对象存储（如 CDN）时配置，默认走同源 /uploads 反代。
   assertUrl('S3_ENDPOINT', config.S3_ENDPOINT, false);
   assertUrl('S3_PUBLIC_BASE_URL', config.S3_PUBLIC_BASE_URL, false);
 
@@ -59,9 +60,6 @@ export function validateConfig(config: AppConfig) {
     }
     if (!config.S3_ACCESS_KEY || !config.S3_SECRET_KEY || !config.S3_BUCKET) {
       throw new Error('生产环境必须配置 S3_BUCKET、S3_ACCESS_KEY 和 S3_SECRET_KEY');
-    }
-    if (!config.S3_PUBLIC_BASE_URL) {
-      throw new Error('生产环境必须配置 S3_PUBLIC_BASE_URL（浏览器直连 MinIO 的地址）');
     }
     // CORS 支持逗号分隔多域名，但每一项都必须是完整 URL，避免误填通配符或半截域名。
     config.CORS_ORIGIN.split(',').forEach((origin) =>

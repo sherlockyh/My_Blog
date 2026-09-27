@@ -20,13 +20,13 @@ const DEFAULT_HERO: HeroConfig = {
   greeting: 'Hi, 我是 yh',
   titleZh: '用代码创造有趣的数字体验',
   titleEn: 'Creating fun digital experiences with code',
-  descZh: '热爱前端开发与产品设计，喜欢把复杂的想法变成简洁、美观且好用的 Web 应用。',
+  descZh: '热爱全栈开发与产品设计，喜欢把复杂的想法变成简洁、美观且好用的 Web 应用。',
   descEn:
-    'Passionate about frontend development and product design, turning complex ideas into simple, beautiful and usable web apps.',
+    'Passionate about full-stack development and product design, turning complex ideas into simple, beautiful and usable web apps.',
 };
 
 const DEFAULT_FEATURES: FeatureItem[] = [
-  { icon: 'code', titleZh: '前端开发', titleEn: 'Frontend', descZh: '', descEn: '' },
+  { icon: 'code', titleZh: '全栈开发', titleEn: 'Full-Stack', descZh: '', descEn: '' },
   { icon: 'react', titleZh: 'React', titleEn: 'React', descZh: '', descEn: '' },
   { icon: 'ts', titleZh: 'TypeScript', titleEn: 'TypeScript', descZh: '', descEn: '' },
   { icon: 'node', titleZh: 'Node.js', titleEn: 'Node.js', descZh: '', descEn: '' },
@@ -42,8 +42,8 @@ function normalizeFeatures(features?: FeatureItem[]) {
 const DEFAULT_PROFILE: ProfileDTO = {
   name: 'yh',
   avatar: '/images/avatar.svg',
-  bioZh: '前端开发工程师，热爱技术与设计，喜欢用代码解决问题，创造价值。',
-  bioEn: 'Frontend engineer who loves tech and design, solving problems with code.',
+  bioZh: '全栈开发工程师，热爱技术与设计，喜欢用代码解决问题，创造价值。',
+  bioEn: 'Full-stack engineer who loves tech and design, solving problems with code.',
   location: '浙江，杭州',
   socials: [],
 };

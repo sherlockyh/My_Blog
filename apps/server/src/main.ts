@@ -7,7 +7,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { AppModule } from './app.module';
 import type { AppConfig } from './common/config/config.validation';
 
-/** 组装 CSP：图片源放行对象存储公网地址，连接源跟随 CORS_ORIGIN（补 ws/wss 变体）。 */
+/** 组装 CSP：图片源默认同源反代，显式配置对象存储公网地址时额外放行；连接源跟随 CORS_ORIGIN（补 ws/wss 变体）。 */
 function buildCsp(s3PublicOrigin: string, connectSources: string[]) {
   return [
     "default-src 'self'",
@@ -40,10 +40,9 @@ async function bootstrap() {
     .map((x) => x.trim())
     .filter(Boolean);
   const wsOrigins = corsOrigins.map((o) => o.replace(/^http/, 'ws'));
-  // 上传图片走浏览器直连 MinIO，img-src 必须放行其公开地址（格式已在 config.validation 校验）。
-  const s3PublicOrigin = new URL(
-    config.get<string>('S3_PUBLIC_BASE_URL') || 'http://localhost:9000',
-  ).origin;
+  // 上传图片默认同源 /uploads 反代，'self' 已覆盖；显式配置 S3_PUBLIC_BASE_URL 时才需放行其地址。
+  const s3PublicBase = config.get<string>('S3_PUBLIC_BASE_URL')?.trim();
+  const s3PublicOrigin = s3PublicBase ? new URL(s3PublicBase).origin : '';
   const csp = buildCsp(s3PublicOrigin, ["'self'", ...corsOrigins, ...wsOrigins]);
 
   expressApp.use((_req: Request, res: Response, next: NextFunction) => {

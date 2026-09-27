@@ -23,9 +23,7 @@ export class StorageService implements OnModuleInit {
 
   constructor(config: ConfigService<AppConfig>) {
     this.bucket = config.get<string>('S3_BUCKET') || 'my-blog';
-    this.publicBaseUrl = (
-      config.get<string>('S3_PUBLIC_BASE_URL') || 'http://localhost:9000'
-    ).replace(/\/+$/, '');
+    this.publicBaseUrl = (config.get<string>('S3_PUBLIC_BASE_URL') || '').replace(/\/+$/, '');
     this.client = new S3Client({
       endpoint: config.get<string>('S3_ENDPOINT') || 'http://localhost:9000',
       region: config.get<string>('S3_REGION') || 'us-east-1',
@@ -88,6 +86,10 @@ export class StorageService implements OnModuleInit {
     );
   }
 
+  async check() {
+    await this.client.send(new HeadBucketCommand({ Bucket: this.bucket }));
+  }
+
   async savePublicFile(file: Express.Multer.File) {
     await this.ensureBucket();
     const ext = extname(file.originalname).toLowerCase();
@@ -101,7 +103,9 @@ export class StorageService implements OnModuleInit {
         ContentType: file.mimetype,
       }),
     );
-    // 返回浏览器直连 MinIO 的完整 URL，前端原样存库渲染；换域名/IP 时需要迁移存量数据。
-    return { url: `${this.publicBaseUrl}/${this.bucket}/${key}` };
+    // 默认返回同源相对路径，由 nginx（生产）/vite（开发）把 /uploads 反代到 MinIO，
+    // 避免浏览器跨源直连 9000 端口被拦以及换域名/HTTPS 后存量 URL 全裂；
+    // 显式配置 S3_PUBLIC_BASE_URL 时仍返回绝对地址（CDN 等直连场景）。
+    return { url: this.publicBaseUrl ? `${this.publicBaseUrl}/${this.bucket}/${key}` : `/${key}` };
   }
 }

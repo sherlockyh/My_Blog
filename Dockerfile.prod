@@ -1,0 +1,46 @@
+# ---------- 公共构建阶段：构建 shared、server 和 web ----------
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+RUN apk add --no-cache openssl && corepack enable
+
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
+COPY apps/server/package.json apps/server/
+COPY apps/web/package.json apps/web/
+COPY packages/shared/package.json packages/shared/
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+RUN pnpm build \
+  && pnpm --filter @my-blog/server deploy --prod /app/deployed \
+  && cd /app/deployed \
+  && npx prisma generate
+
+# ---------- NestJS API 与 Prisma migration 镜像 ----------
+FROM node:20-alpine AS server
+
+RUN apk add --no-cache openssl tzdata wget
+ENV TZ=Asia/Shanghai NODE_ENV=production
+WORKDIR /app/server
+
+COPY --from=builder /app/deployed /app/server
+
+RUN chown -R node:node /app/server
+USER node
+
+EXPOSE 7001
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=10 \
+  CMD wget -q --spider http://127.0.0.1:7001/api/health/live || exit 1
+
+CMD ["node", "dist/main.js"]
+
+# ---------- Nginx 前端静态资源与反向代理镜像 ----------
+FROM nginx:1.28-alpine AS nginx
+
+RUN apk add --no-cache wget
+COPY docker/nginx.prod.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+
+EXPOSE 80
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=10 \
+  CMD wget -q -O - http://127.0.0.1/healthz | grep -q '^ok' || exit 1

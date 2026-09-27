@@ -10,3 +10,5 @@ coverage/
 
 # ZCode 本地工具目录
 .zcode/
+.env.production
+.env.production.*

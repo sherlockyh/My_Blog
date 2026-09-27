@@ -6,6 +6,7 @@ import { AuditService } from '../src/common/audit/audit.service';
 import { JwtGuard } from '../src/common/guards/jwt.guard';
 import { PrismaService } from '../src/common/prisma/prisma.service';
 import { RedisService } from '../src/common/redis/redis.service';
+import { StorageService } from '../src/modules/upload/storage.service';
 
 /**
  * e2e 冒烟：验证应用能完整启动（全局管道/拦截器/守卫/过滤器接线正确）、
@@ -48,6 +49,8 @@ describe('App (e2e)', () => {
           eval: async () => 1,
         },
       })
+      .overrideProvider(StorageService)
+      .useValue({ check: async () => undefined })
       .overrideProvider(AuditService)
       .useValue({ log: auditLog })
       // 审计断言路由在 JwtGuard 之后，测试中直接放行

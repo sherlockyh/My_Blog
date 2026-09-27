@@ -111,6 +111,12 @@ export default defineConfig(({ mode }) => ({
     port: 5173,
     proxy: {
       '/api': { target: 'http://localhost:7001', changeOrigin: true },
+      // 上传图片存相对路径 /uploads/...，dev 下反代到 MinIO 的 my-blog 桶。
+      '/uploads': {
+        target: 'http://localhost:9000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/uploads/, '/my-blog/uploads'),
+      },
     },
   },
 }));

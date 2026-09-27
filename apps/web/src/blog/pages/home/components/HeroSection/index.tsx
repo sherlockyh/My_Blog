@@ -9,7 +9,7 @@ import WeatherChip from '@/blog/components/WeatherChip';
 import './styles/index.less';
 
 const DEFAULT_TITLE = '用代码创造有趣的数字体验';
-const DEFAULT_DESC = '专注前端开发与产品设计，分享技术文章、开发经验和有趣的数字产品。';
+const DEFAULT_DESC = '专注全栈开发与产品设计，分享技术文章、开发经验和有趣的数字产品。';
 
 function splitTitle(text: string): [string, string] {
   if (text.includes(' ')) {

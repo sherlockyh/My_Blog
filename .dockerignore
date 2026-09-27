@@ -17,3 +17,5 @@ uploads
 README.md
 docker-compose.yml
 .DS_Store
+.env.production
+.env.production.*
