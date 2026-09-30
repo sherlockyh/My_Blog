@@ -26,6 +26,14 @@ export default function Footer() {
         <div className="footer-copy">
           © {new Date().getFullYear()} {name} · {t('footer.rights')}
         </div>
+        <a
+          className="footer-icp"
+          href="https://beian.miit.gov.cn/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {t('footer.icp')}
+        </a>
         <span className="footer-links">
           {socials.map((item) => (
             <a
