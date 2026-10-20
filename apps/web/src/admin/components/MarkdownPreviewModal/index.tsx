@@ -1,7 +1,8 @@
-// 组件用途：展示文章 Markdown 内容的弹窗预览。
+// 组件用途：展示Markdown 内容的弹窗预览。
 import { Modal } from 'antd';
 import { useTranslation } from 'react-i18next';
 import MDEditor from '@uiw/react-md-editor';
+import './styles/index.less';
 
 interface MarkdownPreviewModalProps {
   open: boolean;

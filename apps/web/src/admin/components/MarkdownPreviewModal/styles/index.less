@@ -1,0 +1,69 @@
+.admin-markdown-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.admin-section-label-between {
+  justify-content: space-between;
+}
+
+.admin-section-label {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.admin-markdown-editor-pane {
+  min-width: 0;
+}
+
+.admin-markdown-editor-pane .w-md-editor {
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.admin-markdown-editor-pane .w-md-editor-toolbar {
+  border-radius: 8px 8px 0 0;
+  background: #f8fbff;
+}
+
+.admin-markdown-preview {
+  max-height: min(68vh, 720px);
+  overflow: auto;
+  padding: 18px;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.admin-preview-modal .ant-modal-body {
+  padding-top: 8px;
+}
+
+.admin-markdown-preview .wmde-markdown {
+  color: #0f172a;
+  background: transparent;
+}
+
+.admin-preview-empty {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: #94a3b8;
+  text-align: center;
+}
+
+@media (max-width: 1360px) {
+  .admin-markdown-preview {
+    max-height: 62vh;
+  }
+}

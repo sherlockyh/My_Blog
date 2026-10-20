@@ -1,4 +1,4 @@
-// 组件用途：展示项目卡片及项目卡片链接包装。
+// 组件用途：展示项目卡片并进入站内项目详情。
 import { Link } from 'react-router-dom';
 import type { ProjectDTO } from '@my-blog/shared';
 import { pick } from '@/utils/content';
@@ -6,12 +6,7 @@ import './styles/index.less';
 
 export default function ProjectCard({ project }: { project: ProjectDTO }) {
   return (
-    <a
-      className="card project-card"
-      href={project.link || undefined}
-      target={project.link ? '_blank' : undefined}
-      rel="noreferrer"
-    >
+    <Link className="card project-card" to={`/projects/${project.id}`}>
       <div className="project-cover">
         {project.cover ? (
           <img src={project.cover} alt={pick(project.titleZh, project.titleEn)} />
@@ -31,14 +26,10 @@ export default function ProjectCard({ project }: { project: ProjectDTO }) {
           ))}
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
 export function ProjectCardLink({ project }: { project: ProjectDTO }) {
-  return (
-    <Link to="/projects">
-      <ProjectCard project={project} />
-    </Link>
-  );
+  return <ProjectCard project={project} />;
 }

@@ -30,6 +30,12 @@ async function bootstrap() {
 
   const expressApp = app.getHttpAdapter().getInstance();
   expressApp.set('trust proxy', 1);
+  // 项目保存包含中英文 Markdown，单独放宽正文大小，避免沿用 32kb 导致 413。
+  app.useBodyParser('json', {
+    limit: '512kb',
+    type: (req: Request) =>
+      /^\/api\/admin\/projects(?:\/|\?|$)/.test(req.url) && !!req.is('application/json'),
+  });
   app.useBodyParser('json', { limit: '32kb' });
 
   // CORS_ORIGIN 支持逗号分隔多个前端来源；开发环境默认放行 vite dev server。

@@ -1,7 +1,7 @@
 // 组件用途：渲染文章中英文内容编辑标签页。
 import { Card, Form, Input, Tabs } from 'antd';
 import { useTranslation } from 'react-i18next';
-import ContentEditor from '../ContentEditor';
+import ContentEditor from '@/admin/components/ContentEditor';
 
 interface ArticleContentTabsProps {
   contentZh: string;

@@ -3,6 +3,7 @@ import { Button } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import MDEditor from '@uiw/react-md-editor';
+import '../MarkdownPreviewModal/styles/index.less';
 
 interface ContentEditorProps {
   value: string;

@@ -39,6 +39,12 @@ export interface ProjectDTO {
   createdAt: string;
 }
 
+/** 项目详情正文按需加载，列表和首页只使用 ProjectDTO。 */
+export interface ProjectDetailDTO extends ProjectDTO {
+  contentZh: string;
+  contentEn: string;
+}
+
 export interface ResourceDTO {
   id: number;
   titleZh: string;

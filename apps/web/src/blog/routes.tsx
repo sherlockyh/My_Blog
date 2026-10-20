@@ -10,6 +10,7 @@ const Archives = lazy(() => import('./pages/archives'));
 const Categories = lazy(() => import('./pages/categories'));
 const Tags = lazy(() => import('./pages/tags'));
 const Projects = lazy(() => import('./pages/projects'));
+const ProjectDetail = lazy(() => import('./pages/projects/ProjectDetail'));
 const Resources = lazy(() => import('./pages/resources'));
 const Guestbook = lazy(() => import('./pages/guestbook'));
 
@@ -25,6 +26,7 @@ export const blogRoutes: RouteObject[] = [
       { path: 'categories', element: <Categories /> },
       { path: 'tags', element: <Tags /> },
       { path: 'projects', element: <Projects /> },
+      { path: 'projects/:id', element: <ProjectDetail /> },
       { path: 'resources', element: <Resources /> },
       { path: 'guestbook', element: <Guestbook /> },
     ],

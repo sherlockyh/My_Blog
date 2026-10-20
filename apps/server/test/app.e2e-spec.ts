@@ -15,6 +15,24 @@ import { StorageService } from '../src/modules/upload/storage.service';
 describe('App (e2e)', () => {
   let app: INestApplication;
   const auditLog = jest.fn();
+  const projectRow = {
+    id: 7,
+    titleZh: '项目详情测试',
+    titleEn: '',
+    descZh: '卡片简介',
+    descEn: '',
+    contentZh: '## 核心功能\n支持项目详情',
+    contentEn: '',
+    cover: '',
+    tags: ['React'],
+    link: 'https://example.com',
+    featured: true,
+    sort: 0,
+    createdAt: new Date().toISOString(),
+  };
+  const findProjects = jest.fn(async ({ select }: { select: Record<string, boolean> }) => [
+    Object.fromEntries(Object.entries(projectRow).filter(([key]) => select[key])),
+  ]);
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -30,6 +48,14 @@ describe('App (e2e)', () => {
           create: async () => ({}),
         },
         project: {
+          findMany: findProjects,
+          count: async () => 1,
+          findUnique: async ({ where }: { where: { id: number } }) =>
+            where.id === 7 ? projectRow : null,
+          update: async ({ data }: { data: Record<string, unknown> }) => ({
+            ...projectRow,
+            ...data,
+          }),
           create: async ({ data }: { data: Record<string, unknown> }) => ({
             id: 7,
             ...data,
@@ -115,5 +141,84 @@ describe('App (e2e)', () => {
     expect(arg.targetId).toBe(7);
     expect(arg.detail).toMatchObject({ titleZh: '审计断言项目' });
     expect(arg.detail).not.toHaveProperty('code');
+  });
+
+  it('公开项目列表与后台分页不携带正文，后台仍保留 items/total 契约', async () => {
+    const publicRes = await request(app.getHttpServer()).get('/api/projects').expect(200);
+    expect(publicRes.body.data[0]).toMatchObject({ id: 7, descZh: '卡片简介' });
+    expect(publicRes.body.data[0]).not.toHaveProperty('contentZh');
+    expect(publicRes.body.data[0]).not.toHaveProperty('contentEn');
+    const adminRes = await request(app.getHttpServer()).get('/api/admin/projects').expect(200);
+    expect(adminRes.body.data).toMatchObject({ total: 1, page: 1 });
+    expect(adminRes.body.data.items[0]).not.toHaveProperty('contentZh');
+    expect(
+      findProjects.mock.calls.every(
+        ([query]) => !query.select.contentZh && !query.select.contentEn,
+      ),
+    ).toBe(true);
+  });
+
+  it.each(['/api/projects/7', '/api/admin/projects/7'])('%s 返回完整正文', async (url) => {
+    const res = await request(app.getHttpServer()).get(url).expect(200);
+    expect(res.body.data).toMatchObject({ id: 7, contentZh: projectRow.contentZh, contentEn: '' });
+  });
+
+  it.each(['/api/projects/9999', '/api/admin/projects/9999'])('%s 不存在返回 404', async (url) => {
+    const res = await request(app.getHttpServer()).get(url).expect(404);
+    expect(res.body).toMatchObject({ code: 404, data: null });
+  });
+
+  it('详情参数必须是整数', async () => {
+    await request(app.getHttpServer()).get('/api/projects/invalid').expect(400);
+  });
+
+  it('创建与修改支持双语正文，并允许清空正文及访问地址', async () => {
+    const created = await request(app.getHttpServer())
+      .post('/api/admin/projects')
+      .send({ titleZh: '项目', contentZh: '## 中文', contentEn: '## English', link: '' })
+      .expect(201);
+    expect(created.body.data).toMatchObject({
+      contentZh: '## 中文',
+      contentEn: '## English',
+      link: '',
+    });
+    const updated = await request(app.getHttpServer())
+      .put('/api/admin/projects/7')
+      .send({ contentZh: '', contentEn: '', link: '' })
+      .expect(200);
+    expect(updated.body.data).toMatchObject({ contentZh: '', contentEn: '', link: '' });
+  });
+
+  it.each(['javascript:alert(1)', 'data:text/html,test', 'ftp://example.com', 'example.com'])(
+    '拒绝不安全或不完整地址 %s',
+    async (link) => {
+      await request(app.getHttpServer())
+        .post('/api/admin/projects')
+        .send({ titleZh: '项目', link })
+        .expect(400);
+      await request(app.getHttpServer()).put('/api/admin/projects/7').send({ link }).expect(400);
+    },
+  );
+
+  it.each(['https://example.com/demo', 'http://localhost:5173'])(
+    '接受完整访问地址 %s',
+    async (link) => {
+      const res = await request(app.getHttpServer())
+        .post('/api/admin/projects')
+        .send({ titleZh: '项目', link: ` ${link} ` })
+        .expect(201);
+      expect(res.body.data.link).toBe(link);
+    },
+  );
+
+  it('拒绝超过约定长度或类型错误的正文', async () => {
+    await request(app.getHttpServer())
+      .put('/api/admin/projects/7')
+      .send({ contentZh: 'a'.repeat(50001) })
+      .expect(400);
+    await request(app.getHttpServer())
+      .post('/api/admin/projects')
+      .send({ titleZh: '项目', contentEn: 123 })
+      .expect(400);
   });
 });

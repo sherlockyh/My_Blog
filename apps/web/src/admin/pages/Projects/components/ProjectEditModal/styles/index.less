@@ -1,0 +1,30 @@
+.admin-project-edit-modal .ant-modal-body {
+  max-height: calc(100vh - 190px);
+  overflow: auto;
+  padding-top: 12px;
+}
+
+.admin-project-editor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 18px;
+  align-items: start;
+}
+
+.admin-project-editor-layout > .ant-card {
+  min-width: 0;
+}
+
+.admin-project-cover {
+  display: block;
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+@media (max-width: 1000px) {
+  .admin-project-editor-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

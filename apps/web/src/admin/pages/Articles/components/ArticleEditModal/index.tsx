@@ -11,7 +11,7 @@ import { validateImageFile } from '@/utils/upload';
 import { useBeforeUnloadWhenDirty, useDirtyConfirm } from '@/hooks/useDirtyConfirm';
 import ArticleContentTabs from './components/ArticleContentTabs';
 import CoverUploader from './components/CoverUploader';
-import MarkdownPreviewModal from './components/MarkdownPreviewModal';
+import MarkdownPreviewModal from '@/admin/components/MarkdownPreviewModal';
 import PublishSettings from './components/PublishSettings';
 import './styles/index.less';
 

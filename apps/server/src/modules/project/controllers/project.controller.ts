@@ -24,6 +24,12 @@ export class ProjectController {
   list() {
     return this.project.list();
   }
+
+  /** 获取项目完整介绍，供独立详情页使用。 */
+  @Get(':id')
+  detail(@Param('id', ParseIntPipe) id: number) {
+    return this.project.detail(id);
+  }
 }
 
 @UseGuards(JwtGuard)
@@ -34,6 +40,12 @@ export class ProjectAdminController {
   @Get()
   list(@Query() query: PageQueryDto) {
     return this.project.adminList(query);
+  }
+
+  /** 编辑和查看时按需读取正文，列表仍返回精简分页数据。 */
+  @Get(':id')
+  detail(@Param('id', ParseIntPipe) id: number) {
+    return this.project.detail(id);
   }
 
   @Post()

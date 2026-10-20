@@ -47,6 +47,8 @@ model Project {
   titleEn   String   @default("")
   descZh    String   @default("")
   descEn    String   @default("")
+  contentZh String   @default("")
+  contentEn String   @default("")
   cover     String   @default("")
   tags      String[]
   link      String   @default("")
