@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-
-type Theme = 'light' | 'dark';
+import { initialTheme, type Theme } from './initialTheme';
 
 interface ThemeState {
   theme: Theme;
@@ -9,7 +8,7 @@ interface ThemeState {
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-  theme: (localStorage.getItem('blog-theme') as Theme) || 'light',
+  theme: initialTheme,
   toggle: () =>
     set((state) => {
       const theme: Theme = state.theme === 'light' ? 'dark' : 'light';

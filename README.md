@@ -215,6 +215,13 @@ My_Blog/
 
 更多目录和模块约定见：[docs/目录结构与模块约定.md](docs/目录结构与模块约定.md)。
 
+## 首页背景图加载
+
+- `apps/web/src/bootstrap.ts` 先恢复保存的主题，并按 `640px` 断点预加载当前首页背景，再加载 React 应用；直接进入其他页面时不预加载首页背景。
+- 背景图位于 `apps/web/src/assets/hero/`，桌面使用原尺寸 WebP，手机使用宽度为 `960px` 的 WebP，保持原有构图。
+- 构建时由 Vite 生成带内容哈希的 `/assets/` 地址，复用 Nginx 已有的一年缓存规则；图片更新会产生新地址。
+- 原始 PNG 保留在 `apps/web/public/images/`，用于后续重新生成图片；首页已不再请求这些 PNG。
+
 ## 浏览量设计
 
 - 文章详情请求触发 `INCR counter:article:{id}`，键首次缺失时使用数据库的 `viewCount` 初始化；
